@@ -1,7 +1,8 @@
 import os.path
 import time
-import greedy.greedy_value as greedy
-
+import greedy.greedy_value as greedyV
+import greedy.greedy_weight as greedyW
+import greedy.greedy as greedy
 
 
 valid = True
@@ -65,16 +66,35 @@ while valid:
 
 
             #We ask which algorithm you want to run
-            algo = input("Which algorithm do you wish to run this data set on ?\nAvailable algorithms are :\n\tGreedy by value : \"gbv\"\nPlease enter your selection by writing the code next to the algorithm of your choice...\n")
+            algo = input("Which algorithm do you wish to run this data set on ?\nAvailable algorithms are :\n\tGreedy by value : \"gbv\"\n\tGreedy by weight : \"gbw\"\n\tGreedy : \"greed\"\nPlease enter your selection by writing the code next to the algorithm of your choice...\n")
 
 
             # Going with the greedy by value algorithm
             if(algo == "gbv") :
                 print("Processing data sets with \"Greedy by value\"")
 
-                time, final_knapsack, final_value = greedy.greedy_value(list_objects, wmax)
+                timer, final_knapsack, final_value = greedyV.greedy_value(list_objects, wmax)
 
-                print("The process took : "+str(time)+" s for execution\nThe knapsack contains these objects :"+str(final_knapsack)+"\nFor a value of :"+str(final_value))
+                print("The process took : "+str(timer)+" s for execution\nThe knapsack contains these objects :"+str(final_knapsack)+"\nFor a value of : "+str(final_value))
+
+
+            # Going with the greedy by weight algorithm
+            if(algo == "gbw") :
+                print("Processing data sets with \"Greedy by weight\"")
+
+                timer, final_knapsack, final_value = greedyW.greedy_weight(list_objects, wmax)
+                
+                print("The process took : "+str(timer)+" s for execution\nThe knapsack contains these objects :"+str(final_knapsack)+"\nFor a value of : "+str(final_value))
+
+
+            # Going with the greedy algorithm
+            if(algo == "greed") :
+                print("Processing data sets with \"Greedy\"")
+
+                timer, final_knapsack, final_value = greedy.greedy(list_objects, wmax)
+                
+                print("The process took : "+str(timer)+" s for execution\nThe knapsack contains these objects :"+str(final_knapsack)+"\nFor a value of : "+str(final_value))
+
 
         #Looping back to entering a file name
         else:
