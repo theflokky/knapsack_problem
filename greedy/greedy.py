@@ -1,9 +1,9 @@
 import time
-from operator import itemgetter
 
-def greedy_value(lo, w):
+
+def greedy(lo, w) :
+
     start_process = time.time()
-
 
     #Short life time list to prevent losing info
     lot = lo
@@ -16,9 +16,9 @@ def greedy_value(lo, w):
     #Final value of the knapsack
     fv = 0
 
-    #New version Sorting with itemgetter to make it faster than lambda x : x[0]
-    lot = sorted(lot,key=itemgetter(0), reverse=True)
 
+    #We need to sort all objects by their ratio of value/weight, we will use sort by a lambad ratio
+    lot = sorted(lot, key=lambda x: (x[0]/x[1]), reverse=True)
 
     for i in range (0,len(lot)):
         if(cw - int(lot[i][1]) > 0):
