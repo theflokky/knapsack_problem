@@ -6,7 +6,7 @@ import math
 
 MINPHERO = 0.01
 MAXPHERO = 6
-RHO = 0.99
+RHO = 0.90
 ALPHA = 1
 BETA = 5
 
@@ -20,39 +20,64 @@ def defCandi(candidates) :
     for i in objects.items():
         candidates.update({i[0] : 1})
 
-def defPhero(phero) :
-    for i in objects.items():
-        phero.update({i[0] : MAXPHERO})
+def defPhero(phero) : 
+    for j in objects.items():
+        tmp = []
+        tmp.append(0)
+        for i in objects.items():
+            if j[0] == i[0]:
+                tmp.append(0)
+            else :
+                tmp.append(MAXPHERO)    
+        phero.update({j[0] : tmp})
+    tmp[len(tmp)-1]=MAXPHERO
+    phero.update({0 : tmp})
+    
 
-def sumPheroValue(phero,objects,candidates) :
+def sumPheroValue(phero,objects,candidates,actu) :
     sum=0
-    for i in phero.items() :
+    for i in objects.items() :
         if candidates[i[0]] == 1 :
-            sum += math.pow(i[1],ALPHA)*math.pow(objects[i[0]][0],BETA)
+            sum += math.pow(phero[actu][i[0]],ALPHA)*math.pow((objects[i[0]][0]/objects[i[0]][1]),BETA)
     return sum
 
-def updatePhero(phero):
+def updatePhero(phero): 
     for i in phero.items() :
-        if phero[i[0]]*RHO < MINPHERO :
-            phero.update({i[0] : MINPHERO})
+        tmp = []
+        
+        if phero[i[0]][0]*RHO < MINPHERO :
+            tmp.append(MINPHERO)
         else :
-            phero.update({i[0] : phero[i[0]]*RHO})
+            tmp.append(phero[i[0]][0]*RHO)
+        for j in phero.items():
+            if i[0] == j[0] :
+                tmp.append(0)
+            elif phero[i[0]][j[0]]*RHO < MINPHERO :
+                tmp.append(MINPHERO)
+            else :
+                tmp.append(phero[i[0]][j[0]]*RHO)
+        phero.update({i[0] : tmp})
+
 
 def setPhero(phero,bestSolution,result):
     p = 1/(1+bestSolution['value']-result['value'])
+    prec = 0
     for i in result["number"] :
-        if phero[i]+p > MAXPHERO :
-            phero.update({i : MAXPHERO})
+        if phero[i][prec]+p > MAXPHERO :
+            phero[i][prec] = MAXPHERO
+            phero[prec][i] = MAXPHERO
         else :
-            phero.update({i : phero[i]+p})
+            phero[i][prec] = phero[i][prec]+p
+            phero[prec][i] = phero[prec][i]+p
+        prec = i
 
-def setProb(probabilites, phero ,objects,candidates):
-    j = sumPheroValue(phero,objects,candidates)
+def setProb(probabilites, phero ,objects,candidates,actu):
+    p = sumPheroValue(phero,objects,candidates,actu)
     maxProb = 0
     for i in candidates.items():
         if i[1] == 1 :
             minProb = maxProb
-            maxProb += (math.pow(phero[i[0]],ALPHA)*math.pow(objects[i[0]][0],BETA))/j
+            maxProb += (math.pow(phero[actu][i[0]],ALPHA)*math.pow((objects[i[0]][0]/objects[i[0]][1]),BETA))/p
             probabilites.update({i[0] : [minProb, maxProb]})
         else :
             probabilites.update({i[0] : [-1, -1]}) # modif
@@ -90,7 +115,6 @@ while True:
 
         phero = {}
         defPhero(phero)
-        
 
         # Create the probabilities table 
         probabilities = {}
@@ -110,13 +134,31 @@ while True:
             defCandi(candidates)
 
             cantGo = 0
+            actu = 0
+            #First item
+            x = random.random()
+            setProb(probabilities,phero,objects,candidates,actu)
+            for j in probabilities.items():
+                if x >= j[1][0] and x < j[1][1] and (result["weight"]+objects[j[0]][1]) <= wmax:
+                    candidates.update({j[0] : 0})
+                    cantGo += 1
+                    actu = j[0]
+                    result["number"].append(j[0])
+                    result["value"] += objects[j[0]][0]
+                    result["weight"] += objects[j[0]][1]
+                    break
+                elif (result["weight"]+objects[j[0]][1]) > wmax :
+                    candidates.update({j[0] : 0})
+                    cantGo += 1
+
             while cantGo<=n:
                 x = random.random()
-                setProb(probabilities,phero,objects,candidates)
+                setProb(probabilities,phero,objects,candidates,actu)
                 for j in probabilities.items():
                     if x >= j[1][0] and x < j[1][1] and (result["weight"]+objects[j[0]][1]) <= wmax:
                         candidates.update({j[0] : 0})
                         cantGo += 1
+                        actu = j[0]
                         result["number"].append(j[0])
                         result["value"] += objects[j[0]][0]
                         result["weight"] += objects[j[0]][1]
@@ -128,8 +170,11 @@ while True:
             if result["value"] > bestSolution["value"] :
                 bestSolution = result
             
+            #printObejects(phero)
             updatePhero(phero)
+            #printObejects(phero)
             setPhero(phero,bestSolution,result)
+            
 
         sorted = bestSolution["number"]
         sorted.sort()
