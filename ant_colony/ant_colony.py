@@ -2,14 +2,14 @@ import time
 import random
 import math
 
-# test file = ../test_files/large_scale/knapPI_1_200_1000_1
+# test file = ../test_files/large_scale/knapPI_1_100_1000_1
 
 #/!\/!\ can be opti = you can try to modify it while you have the same structur
 #/!\/!\ do not change = destroy algo if you change it !
 #/!\/!\
 
 # params change result
-ALPHA = 1
+ALPHA = 2
 RHO = 0.98
 BETA = 5
 
@@ -19,25 +19,25 @@ MAXPHERO = 6
 
 
 def defCandi(candidates) : # can be opti ?
-    for i in objects.items():
-        candidates.update({i[0] : 1})
+    for i in range(len(list_objects)):
+        candidates.update({i : 1})
 
 def defPhero(phero) : # can be opti ?
-    for j in objects.items():
+    for j in range(len(list_objects)):
         tmp = [0]
-        for i in objects.items():
-            tmp.append(0 if j[0] == i[0] else MAXPHERO)
-        phero.update({j[0] : tmp})
+        for i in range(len(list_objects)):
+            tmp.append(0 if j == i else MAXPHERO)
+        phero.update({j : tmp})
     tmp[-1]=MAXPHERO
-    phero.update({0 : tmp})
+    phero.update({len(list_objects) : tmp})
     
 
-def sumPheroValue(phero,objects,candidates,current) : # do not change !!!
+def sumPheroValue(phero,list_objects,candidates,current) : # do not change !!!
     # Sum of pheromones depending of the curent item
     sum=0
-    for i in objects.items() :
-        if candidates[i[0]] == 1 :
-            sum += math.pow(phero[current][i[0]],ALPHA)*math.pow((objects[i[0]][0]/objects[i[0]][1]),BETA) 
+    for i in range(len(list_objects)) :
+        if candidates[i] == 1 :
+            sum += math.pow(phero[current][i],ALPHA)*math.pow((list_objects[i][0]/list_objects[i][1]),BETA) 
     return sum
 
 def updatePhero(phero): # do not change !!!
@@ -71,18 +71,18 @@ def setPhero(phero,bestSolution,currentSolution): # do not change !!!
             phero[prec][i] = phero[prec][i]+p
         prec = i
 
-def setProb(probabilities, phero ,objects,candidates,current): # do not change !!!
+def setProb(probabilities, phero ,list_objects,candidates,current): # do not change !!!
     # Calculate the probabilities for each items depending of the current item
-    p = sumPheroValue(phero,objects,candidates,current)
+    p = sumPheroValue(phero,list_objects,candidates,current)
     maxProb = 0
     for i in candidates.items():
         # Calculate only for items candidates
         if i[1] == 1 :
             minProb = maxProb
-            maxProb += (math.pow(phero[current][i[0]],ALPHA)*math.pow((objects[i[0]][0]/objects[i[0]][1]),BETA))/p
+            maxProb += (math.pow(phero[current][i[0]],ALPHA)*math.pow((list_objects[i[0]][0]/list_objects[i[0]][1]),BETA))/p
             probabilities.update({i[0] : [minProb, maxProb]})
 
-def ant(objects,nbAnts):
+def ant(list_objects,nbAnts,n,wmax):
     # For the time of execution
     start_process = time.time()
 
@@ -115,19 +115,19 @@ def ant(objects,nbAnts):
         x = random.random()
 
         # Set probabilities for 0 (empty bag)
-        setProb(probabilities,phero,objects,candidates,current)
+        setProb(probabilities,phero,list_objects,candidates,current)
             
         # Get the first item 
         for j in probabilities.items():
-            if x >= j[1][0] and x < j[1][1] and (currentSolution["weight"]+objects[j[0]][1]) <= wmax:
+            if x >= j[1][0] and x < j[1][1] and (currentSolution["weight"]+list_objects[j[0]][1]) <= wmax:
                 # Remove j of cantidates
                 candidates.update({j[0] : 0})
                 # Remove the pobability of j
                 probabilities.update({j[0] : [-1, -1]}) # do not change !!!
                 # Save j in the current solution
                 currentSolution["number"].append(j[0])
-                currentSolution["value"] += objects[j[0]][0]
-                currentSolution["weight"] += objects[j[0]][1]
+                currentSolution["value"] += list_objects[j[0]][0]
+                currentSolution["weight"] += list_objects[j[0]][1]
                 # Put j in the current item
                 current = j[0]
                 # Incrase item check
@@ -136,22 +136,22 @@ def ant(objects,nbAnts):
                 break
         
         # While we didin't check all items
-        while cantGo<=n:
+        while cantGo <= n :
             # Next item
             x = random.random()
             # Update probabilities for the current item
-            setProb(probabilities,phero,objects,candidates,current)
+            setProb(probabilities,phero,list_objects,candidates,current)
             for j in probabilities.items():
                 # Get the next item
-                if x >= j[1][0] and x < j[1][1] and (currentSolution["weight"]+objects[j[0]][1]) <= wmax:
+                if x >= j[1][0] and x < j[1][1] and (currentSolution["weight"]+list_objects[j[0]][1]) <= wmax:
                     # Remove j of candidates
                     candidates.update({j[0] : 0})
                     # Remove the probability of j
                     probabilities.update({j[0] : [-1, -1]}) # do not change !!!
                     # Save j in the current item
                     currentSolution["number"].append(j[0])
-                    currentSolution["value"] += objects[j[0]][0]
-                    currentSolution["weight"] += objects[j[0]][1]
+                    currentSolution["value"] += list_objects[j[0]][0]
+                    currentSolution["weight"] += list_objects[j[0]][1]
                     # Put j in the current item
                     current = j[0]
                     # Incrase item check
@@ -159,7 +159,7 @@ def ant(objects,nbAnts):
                     # If xe found the item we don't need to check the others
                     break
                 # If the items is too heavy
-                elif (currentSolution["weight"]+objects[j[0]][1]) > wmax :
+                elif (currentSolution["weight"]+list_objects[j[0]][1]) > wmax :
                     # Remove j of candidates
                     candidates.update({j[0] : 0})
                     # Remove the probability of j
@@ -188,33 +188,29 @@ def ant(objects,nbAnts):
 
 if __name__=="__main__":
     try :
-        # Get file name and check if exist --------------------
-        print("\nTo quit : CTRL-C")
-        name = input("File name : ")
-        
-        # Load file data --------------------------------------
-        with open(name, "r") as f :
-            allFile = f.read()
-            line = allFile.split("\n")
-            
-        # Split file data -------------------------------------
-        line = line[:-2] # Don't take last line (the solution)
-        nb, w = line[0].split()
-        n = int(nb)   # Number of items
-        wmax = int(w) # Max Weight 
-        line = line[1:] # Don't take first line (n, wmax)
+        file = input("file name : ")
 
-        objects = {}
-        i = 0
-        for l in line :
-            # Put all objects in 'objects'
-            value, w = l.split()
-            i+=1
-            objects.update({i : [int(value),int(w)]})
+        with open(file, "r") as f:
+            data = f.read()
+            line = data.split("\n")
+        
+        # First with the number of object and the capacity of the knapsack
+        nbo, ksc = line[0].split()
+        
+        n = int(nbo) # number of object
+        wmax = int(ksc) # Maximum weight
+
+        # Proceeding every object and giving the time needed to process the file
+        list_objects = [] 
+        for i in range(1, n+1):
+            oval, owei = line[i].split()
+            list_objects.append((int(oval), int(owei)))
+        else :
+            print("Finished loading the objects !\n")
 
         nbAnts = int(input("How many ants : "))
 
-        ant(objects,nbAnts)
+        ant(list_objects,nbAnts,n,wmax)
         
     except KeyboardInterrupt:
         """ To stop the program ! """
