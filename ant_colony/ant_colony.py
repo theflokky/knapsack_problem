@@ -18,11 +18,11 @@ MINPHERO = 0.01
 MAXPHERO = 6
 
 
-def defCandi(candidates) : # can be opti ?
+def defCandi(candidates, list_objects) : # can be opti ?
     for i in range(len(list_objects)):
         candidates.update({i : 1})
 
-def defPhero(phero) : # can be opti ?
+def defPhero(phero, list_objects) : # can be opti ?
     for j in range(len(list_objects)):
         tmp = [0]
         for i in range(len(list_objects)):
@@ -88,7 +88,7 @@ def ant(list_objects,nbAnts,n,wmax):
 
     # Initialize the pheromones table ---------------------
     phero = {}
-    defPhero(phero)
+    defPhero(phero, list_objects)
 
     # Create the probabilities table ----------------------
     probabilities = {}
@@ -103,7 +103,7 @@ def ant(list_objects,nbAnts,n,wmax):
         
         # Create candidates list
         candidates = {}
-        defCandi(candidates)
+        defCandi(candidates, list_objects)
 
         # Number of items check
         cantGo = 0
@@ -183,8 +183,9 @@ def ant(list_objects,nbAnts,n,wmax):
     # Just to show the best solution 
     sorted = bestSolution["number"]
     sorted.sort()
-    print(sorted)
-    print(f"{bestSolution['value']}\nweith : {bestSolution['weight']}/{wmax}\ntime : {end_process-start_process}\n")
+    #print(sorted)
+    #print(f"{bestSolution['value']}\nweith : {bestSolution['weight']}/{wmax}\ntime : {end_process-start_process}\n")
+    return (end_process- start_process), sorted, bestSolution["value"]
 
 if __name__=="__main__":
     try :
