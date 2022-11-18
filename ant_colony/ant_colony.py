@@ -184,7 +184,7 @@ def ant(list_objects,nbAnts,n,wmax):
 
     # Just to show the best solution 
     #print(f"{bestSolution['objects']}\nweith : {bestSolution['weight']}/{wmax}\ntime : {end_process-start_process}\n")
-    return (end_process- start_process), sorted, bestSolution["objects"]
+    return (end_process- start_process), bestSolution["objects"], bestSolution["value"]
 
 if __name__=="__main__":
     try :
