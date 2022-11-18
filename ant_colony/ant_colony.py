@@ -94,12 +94,12 @@ def ant(list_objects,nbAnts,n,wmax):
     probabilities = {}
 
     # Create the save of the best solution ----------------
-    bestSolution ={'number' :[], 'value' : -1 , 'weight': -1}
+    bestSolution ={'number' :[], 'objects' : [],'value' : -1 , 'weight': -1}
     
     # Ant loop --------------------------------------------
     for ant in range(nbAnts) :
         # Create the current solution
-        currentSolution = {'number' :[], 'value' : 0 , 'weight': 0}
+        currentSolution = {'number' :[], 'objects' : [], 'value' : 0 , 'weight': 0}
         
         # Create candidates list
         candidates = {}
@@ -126,6 +126,7 @@ def ant(list_objects,nbAnts,n,wmax):
                 probabilities.update({j[0] : [-1, -1]}) # do not change !!!
                 # Save j in the current solution
                 currentSolution["number"].append(j[0])
+                currentSolution["objects"].append(list_objects[j[0]])
                 currentSolution["value"] += list_objects[j[0]][0]
                 currentSolution["weight"] += list_objects[j[0]][1]
                 # Put j in the current item
@@ -150,6 +151,7 @@ def ant(list_objects,nbAnts,n,wmax):
                     probabilities.update({j[0] : [-1, -1]}) # do not change !!!
                     # Save j in the current item
                     currentSolution["number"].append(j[0])
+                    currentSolution["objects"].append(list_objects[j[0]])
                     currentSolution["value"] += list_objects[j[0]][0]
                     currentSolution["weight"] += list_objects[j[0]][1]
                     # Put j in the current item
@@ -181,11 +183,8 @@ def ant(list_objects,nbAnts,n,wmax):
     end_process = time.time()
 
     # Just to show the best solution 
-    sorted = bestSolution["number"]
-    sorted.sort()
-    #print(sorted)
-    #print(f"{bestSolution['value']}\nweith : {bestSolution['weight']}/{wmax}\ntime : {end_process-start_process}\n")
-    return (end_process- start_process), sorted, bestSolution["value"]
+    #print(f"{bestSolution['objects']}\nweith : {bestSolution['weight']}/{wmax}\ntime : {end_process-start_process}\n")
+    return (end_process- start_process), sorted, bestSolution["objects"]
 
 if __name__=="__main__":
     try :
