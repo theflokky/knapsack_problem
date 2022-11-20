@@ -52,7 +52,7 @@ class App() :
         self.all_files = tk.OptionMenu(self.parent,self.list_files, *self.files)
         self.all_files.grid(column=175,row=5)
 
-        self.label_ant = tk.Label(self.parent, text="How many ants ? ")
+        self.label_ant = tk.Label(self.parent, text="How many ants ? (default = 30) ")
         self.nb_ant = tk.Entry(self.parent)
 
         # Option algos
@@ -117,7 +117,7 @@ class App() :
         self.button = tk.Button(self.parent, text="Launch", command=self.launch)
         self.button.grid(column=175,row=10)
 
-        self.label_ant = tk.Label(self.parent, text="How many ants ? ")
+        self.label_ant = tk.Label(self.parent, text="How many ants ? (default = 30) ")
         self.nb_ant = tk.Entry(self.parent)
 
         self.time = tk.Label(self.parent,text="")
@@ -166,7 +166,7 @@ class App() :
         self.button = tk.Button(self.parent, text="Launch", command=self.launch)
         self.button.grid(column=175,row=10)
 
-        self.label_ant = tk.Label(self.parent, text="How many ants ? ")
+        self.label_ant = tk.Label(self.parent, text="How many ants ? (default = 30) ")
         self.nb_ant = tk.Entry(self.parent)
 
         self.time = tk.Label(self.parent,text="")
@@ -204,7 +204,7 @@ class App() :
         self.button = tk.Button(self.parent, text="Launch", command=self.launch)
         self.button.grid(column=175,row=10)
 
-        self.label_ant = tk.Label(self.parent, text="How many ants ? ")
+        self.label_ant = tk.Label(self.parent, text="How many ants ? (default = 30) ")
         self.nb_ant = tk.Entry(self.parent)
 
         self.time = tk.Label(self.parent,text="")
@@ -224,7 +224,10 @@ class App() :
         n,wmax,list_objects = load(path)
         match al:
             case "ant_colony" :
-                nb = int(self.nb_ant.get())
+                if str(self.nb_ant.get()).isnumeric() :
+                    nb = int(self.nb_ant.get())
+                else :
+                    nb = 30
                 t,obj,value = ant.ant(list_objects,nb,n,wmax)
             case "branch_and_bound" :
                 print("à faire")
@@ -242,7 +245,7 @@ class App() :
                 print("defaut")
 
         o = ""
-        if len(obj)> 900 :
+        if len(obj)> 100 :
             tmp = obj[-10:]
             obj = obj[:10]
             obj.append("...")
