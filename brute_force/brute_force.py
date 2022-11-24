@@ -1,17 +1,25 @@
-# Brute Force Algorithm
+#Brute Force Algorithm Implementation
 
-# Libraries
+#Imports
 import time
 
-# Global Variables
-solution = [0, 0, []]
 
-# Functions
 
-# Function wich is calculating all the possibilities of combination of element and returned a list of 0 and 1
-
+###FUNCTION DECLARATIONS###
 
 def generateAllPossibilities(n):
+    """
+    Return a list containing every sequence of n bits possible.
+    A 1 in position number i indicates that the object number i must be taken.
+    A 0 in position number i indicated that the object number i shall not be taken.
+    Parameters :
+    \tn : int
+    Output :
+    \tl : list<list<int>>
+    Example :
+    >>> brute_force.generateAllPossibilities(3)
+    [[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 0], [0, 0, 1], [1, 0, 1], [0, 1, 1], [1, 1, 1]]
+    """
     l = [[0], [1]]
     start = 0
     for i in range(1, n):
@@ -22,48 +30,56 @@ def generateAllPossibilities(n):
         start = tmp
     return l[start:]
 
-# Function principal of the bruteForve
+def bruteForce(maxWeight, objectList):
+    """
+    Main function implementing the Brute Force Algorithm.
+    Returns the time used for the execution, a list containing the objects taken and the optimal solution, given maxWeight the maximum weight of the knapsack and objectList, a list describing the set of objects that should be considered.
+    Parameters:
+    \tmaxWeight : int
+    \tobjectList : list<(int,int)>
+    """
 
-
-def bruteForce(maxWeigth, objectList):
-    # We launch the timer
+    # Starting timer
     startTime = time.time()
 
-    # We generate all the possibilities
+    # Generation of possibilities in an exhaustive list
     allPossibilities = generateAllPossibilities(len(objectList))
 
     # Initialization of the current best solution
-    currentBest = (0, 0)
+    currentBest = (0, -1)
 
-    # We parcour all the possibilities
+    # Going through every possibility
     for currentPossibility, element in enumerate(allPossibilities):
-        # Initialization of the current Weigth and Value
-        currentWeigth = 0
+        # Initialization of the current Weight and Value
+        # currentWeight in the bag
+        # currentValue in the bag
+        currentWeight = 0
         currentValue = 0
 
-        # We parcours the possibility list
+        # Going through the bits encoded by the possibility
         for index, bit in enumerate(element):
-            # If equals to 1
+            # If the bit is a 1
             if bit:
-                # We update the currentWeigth
+                # Update of currentWeight
                 currentWeigth += objectList[index][1]
-                # We verify that the current Solution can enter into the knapsack
-                if currentWeigth <= maxWeigth:
+                # Verification that currentWeight doesn't exceed maxWeight
+                if currentWeight <= maxWeight:
                     currentValue += objectList[index][0]
-                # If not we pass to next one
+                # If it exceeds, this possibility isn't feasible. We go to the next one
                 else:
                     break
-        # We verify if the current solution is better than the actual better one
+        # If the currentPossibility is better than the previous best one
         if currentValue > currentBest[1]:
+            # The currentBest is updated
             currentBest = (currentPossibility, currentValue)
 
     # Ending the timer
     endTime = time.time()
 
-    # Reconstitution of the knapsack in order to facilitate the displaying
+    # Reconstitution of the knapsack for displaying purposes
     finalKnapsack = []
     for i, obj in enumerate(allPossibilities[currentBest[0]]):
         if (obj == 1):
             finalKnapsack.append(objectList[i])
 
-    return (endTime - startTime), finalKnapsack, currentBest[1]
+    return ((endTime - startTime), finalKnapsack, currentBest[1])
