@@ -49,7 +49,7 @@ if __name__ == "__main__":
         try:
             # Here we take the input of the user for which dataset we work with
             file_mode = input(
-                "Please enter a value as follow :\n\t-enter \'1\': 0/1 Knapsack problem\n\t-enter \'2\' : multiple knapsack problem\n\t-enter \'3\' : multidimensional problem\n")
+                "Please enter a value as follow :\n\t-enter \'1\': 0/1 Knapsack problem\n\t-enter \'2\' :  multidimensional problem\n")
             match file_mode:
                 # The user wants to quit
                 case "q":
@@ -130,36 +130,9 @@ if __name__ == "__main__":
                             print(
                                 "Unknow value detected, please try again. If you want to quit you can write 'q'.\n")
 
-                # The user asks for multiple knapsack problem
-                case "2":
-                    # Showcasing all files available
-                    i = 0
-                    print("Choose which file you want to work on :")
-                    for f in multiple_knapsack:
-                        print(f"\'{i}\' : {f}")
-                        i += 1
-                    num_file = input()
-                    # Just in case the user wants to quit
-                    if (num_file == "q" or num_file == "Q"):
-                        print("Exiting process, goodbye !")
-                        valid = False
-                        break
-                    # Here we check for the value entered by user
-                    if num_file.isnumeric():
-                        # Checking if it is included between awaited value
-                        # If not then we proceed with default file (the first one)
-                        if int(num_file) > i or int(num_file) < 0:
-                            print(
-                                "Invalid option entered, going with the first file by default")
-                            file = multiple_knapsack[0]
-                        else:
-                            file = multiple_knapsack[int(num_file)]
-                    else:
-                        print(
-                            "Unknown value detected, please try again. You can exit by pressing 'q'.\n")
-
                 # The user asks for multidimensional knapsack
-                case "3":
+                case "2":
+                    
                     # Asking the user which dataset he wants to use
                     dim = input(
                         "Which dataset do you wish to work on ? :\n\t-enter \'1\' : chubeas\n\t-enter \'2\' : gk\n\t-enter \'3\' : sac94\n")
@@ -304,35 +277,30 @@ if __name__ == "__main__":
                         # Going with the greedy by value algorithm
                         case "gbv":
                             print("Processing data sets with \"Greedy by value\"")
-                            timer, final_knapsack, final_value = greedyV.greedy_value(
-                                list_objects, wmax)
+                            timer, final_knapsack, final_value = greedyV.greedy_value_01(list_objects, wmax)
                             print(
                                 f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
                         # Going with the greedy by weight algorithm
                         case "gbw":
                             print("Processing data sets with \"Greedy by weight\"")
-                            timer, final_knapsack, final_value = greedyW.greedy_weight(
-                                list_objects, wmax)
+                            timer, final_knapsack, final_value = greedyW.greedy_weight_01(list_objects, wmax)
                             print(
                                 f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
                         # Going with the greedy algorithm
                         case "greed":
                             print("Processing data sets with \"Greedy\"")
-                            timer, final_knapsack, final_value = greedy.greedy(
-                                list_objects, wmax)
+                            timer, final_knapsack, final_value = greedy.greedy_01(list_objects, wmax)
                             print(
                                 f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
                         # Going with the ant algorithm
                         case "ant":
                             print("Processing data sets with \"Ant algorithm\"")
                             nbAnts = int(input("How many ants : "))
-                            timer, final_knapsack, final_value = ant.ant(
-                                list_objects, nbAnts, n, wmax)
+                            timer, final_knapsack, final_value = ant.ant(list_objects, nbAnts, n, wmax)
                             print(
                                 f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
                         case "bf":
-                            timer, final_knapsack, final_value = bruteForce.bruteForce(
-                                wmax, list_objects)
+                            timer, final_knapsack, final_value = bruteForce.bruteForce(wmax, list_objects)
                             print(
                                 f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
                         case _:
@@ -340,18 +308,92 @@ if __name__ == "__main__":
                                 "Unknown value was inputed, please try again. To quit press 'q'\n")
 
                 elif file_mode == "2":
-                    # Reading the data of multiple knapsack problem
+                    # Reading the data of multidimensional
                     # this means the file looks up like that :
                     #
-                    # p0X_c.txt :
-                    #    Contains the capacity of all knapsack
+                    # Number of objects Number of dimension (M) Optimal solution (0 if none) 
+                    # 
+                    # P1 W1D1 W1D2 ... W1DM
+                    #    . . .
+                    # Pn WnD1 WnD2 ... WnDM
                     #
-                    # p0X_p.txt :
-                    #    Contains the price of all object
+                    # With Pn the profit (value) of the object
+                    # and WnDM the weight in the M dimension for this object
                     #
-                    # p0X_w.txt :
-                    #    Contains the weight of all object
-                    print("In process sorry")
+                    
+                    # Let's read the file
+                    print("Starting reading the file !")
+                    start_reading = time.time()
+                    with open(file, "r") as f:
+                        data = f.read()
+                        line = data.split("\n")
+
+                    # Starting to gather data
+                    nbo, ndim, opti_sol = line[0].split()
+
+                    n = int(nbo)
+                    ndim = int(ndim)
+                    ksc = []
+                    # In order to gather one object at a time
+                    object = []
+
+                    # Receiving container
+                    list_objects = []
+
+                    # Checking all objects
+                    acc = 0
+                    for l in line[1:]:
+                        # getting all objects and their profit
+                        if len(list_objects) < n:
+                            for w in l.split():
+                                object.append(int(w))
+                                acc+=1
+                                if acc == ndim+1:
+                                    list_objects.append(object)
+                                    acc = 0
+                                    object = []
+                        else:
+                            # Getting the knapsack capacity             
+                            for w in l.split():    
+                                ksc.append(int(w))
+
+                    # We ask which algorithm you want to run
+                    algo = input("Which algorithm do you wish to run this data set on ?\nAvailable algorithms are :\n\tGreedy by value : \"gbv\"\n\tGreedy by weight : \"gbw\"\n\tGreedy : \"greed\"\n\tAnt algorithm : \"ant\"\n\tBrute Force : \"bf\"\nPlease enter your selection by writing the code next to the algorithm of your choice...\n")
+                    match algo:
+                        # Going with the greedy by value algorithm
+                        case "gbv":
+                            print("Processing data sets with \"Greedy by value\"")
+                            timer, final_knapsack, final_value = greedyV.greedy_value_multi(list_objects, ksc)
+                            print(
+                                f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
+                        # Going with the greedy by weight algorithm
+                        case "gbw":
+                            print("Processing data sets with \"Greedy by weight\"")
+                            timer, final_knapsack, final_value = greedyW.greedy_weight_multi(list_objects, ksc)
+                            print(
+                                f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
+                        # Going with the greedy algorithm
+                        case "greed":
+                            print("Processing data sets with \"Greedy\"")
+                            timer, final_knapsack, final_value = greedy.greedy_multi(list_objects, ksc)
+                            print(
+                                f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
+                        # Going with the ant algorithm
+                        case "ant":
+                            print("If someone as enought faith or it")
+                            #print("Processing data sets with \"Ant algorithm\"")
+                            #nbAnts = int(input("How many ants : "))
+                            #timer, final_knapsack, final_value = ant.ant(list_objects, nbAnts, n, wmax)
+                            #print(
+                            #    f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
+                        case "bf":
+                            print("Will it be developped on day ?")
+                            #timer, final_knapsack, final_value = bruteForce.bruteForce(wmax, list_objects)
+                            #print(
+                            #    f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
+                        case _:
+                            print(
+                                "Unknown value was inputed, please try again. To quit press 'q'\n")
 
                 # If not looping back to input questions
 

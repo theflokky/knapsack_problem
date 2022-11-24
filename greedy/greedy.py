@@ -17,7 +17,7 @@ def find_minrun(n):
 
 # Sorting runnable size of list
 # From left to right
-def insertion_sort(list, left, right):
+def insertion_sort_01(list, left, right):
     for i in range(left + 1, right + 1):
         j = i
         while j > left and list[j][0]/list[j][1] > list[j - 1][0]/list[j - 1][1]:
@@ -25,7 +25,7 @@ def insertion_sort(list, left, right):
             j -= 1
 
 # Merging function to unify all sublist
-def merge(list, l, m, r):
+def merge_01(list, l, m, r):
     # breaking up in two parts the list:
     # The first half
     len1 = m - l + 1
@@ -71,14 +71,14 @@ def merge(list, l, m, r):
 
 # Main function for timsort
 # Returns the sorted list
-def timsort(list):
+def timsort_01(list):
     n = len(list)
     minrun = find_minrun(n)
 
     # Called for sorting runnable list sizes
     for start in range(0, n, minrun):
         end = min(start + minrun-1, n-1)
-        insertion_sort(list, start, end)
+        insertion_sort_01(list, start, end)
 
     # Merging multiple sublist together
     size = minrun
@@ -89,11 +89,11 @@ def timsort(list):
             right = min( (left + 2 * size - 1), (n - 1))
 
             if mid < right:
-                merge(list, left, mid, right)
+                merge_01(list, left, mid, right)
 
         size = 2 * size
 
-def greedy(lo, w) :
+def greedy_01(lo, w) :
 
     start_process = time.time()
 
@@ -110,7 +110,7 @@ def greedy(lo, w) :
 
 
     # New version implementing the timsort
-    timsort(lot)
+    timsort_01(lot)
 
     for i in range (0,len(lot)):
         if(cw - int(lot[i][1]) > 0):

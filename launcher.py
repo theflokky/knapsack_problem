@@ -236,11 +236,11 @@ class App() :
             case "dynamic_programming" :
                 print("à faire")
             case "greedy_value" :
-                t,obj,value = greedyV.greedy_value(list_objects,wmax)
+                t,obj,value = greedyV.greedy_value_01(list_objects,wmax)
             case "greedy_weight" :
-                t,obj,value = greedyW.greedy_weight(list_objects,wmax)
+                t,obj,value = greedyW.greedy_weight_01(list_objects,wmax)
             case "greedy" :
-                t,obj,value = greedy.greedy(list_objects,wmax)
+                t,obj,value = greedy.greedy_01(list_objects,wmax)
             case _ :
                 print("defaut")
 
