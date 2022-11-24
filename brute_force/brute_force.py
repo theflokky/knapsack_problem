@@ -5,13 +5,11 @@ Brute Force Algorithm Implementation.
 #Imports
 import time
 
-
-
 ###FUNCTION DECLARATIONS###
 
 def generateAllPossibilities(n):
     """
-    Return a list containing every sequence of n bits possible.
+    Returns a list containing every sequence of n bits possible.
     A 1 in position number i indicates that the object number i must be taken.
     A 0 in position number i indicated that the object number i shall not be taken.
     Parameters :
@@ -36,9 +34,11 @@ def bruteForce(maxWeight, objectList):
     """
     Main function implementing the Brute Force Algorithm.
     Returns the time used for the execution, a list containing the objects taken and the optimal solution, given maxWeight the maximum weight of the knapsack and objectList, a list describing the set of objects that should be considered.
-    Parameters:
+    Parameters :
     \tmaxWeight : int
     \tobjectList : list<(int,int)>
+    Ourput :
+    \t((runTime, finalKnapsack, solution) : (float, list<(int,int)>, list<int>)
     """
 
     # Starting timer
