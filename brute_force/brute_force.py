@@ -1,4 +1,6 @@
-#Brute Force Algorithm Implementation
+"""
+Brute Force Algorithm Implementation.
+"""
 
 #Imports
 import time
