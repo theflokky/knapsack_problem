@@ -1,44 +1,5 @@
 import time
 
-# DATA
-items = ['map', 'compass', 'water', 'sandwich', 'glucose', 'tin', 'banana',\
-'apple', 'cheese', 'beer', 'suntan', 'camera', 'T', 'trousers', 'umbrella', 'w t', 'w o', \
-'note-case', 'sunglasses', 'towel', 'socks', 'book']
-weights = [9, 13, 153, 50, 15, 68, 27, 39, 23, 52, 11, 32, 24, 48, 73, 42, 43, 22, 7, 18, 4, 30]
-values = [150, 35, 200, 160, 60, 45, 60, 40, 30, 10, 70, 30, 15, 10, 40, 70, 75, 80, 20, 12, 50, 10]
-
-a = sorted(zip(items, weights, values), key= lambda x : -x[2]/x[1])
-items = [i for i,_,_ in a]
-weights = [i for _,i,_ in a]
-values = [i for _,_,i in a]
-
-
-
-N_ITEMS = min(len(items), len(weights), len(values)) #number of items
-
-
-print("Nombre d'items", N_ITEMS)
-
-
-sum = 0
-j = 0
-for j in range(N_ITEMS) :
-    sum = sum+weights[j]
-
-print("weight :", sum)
-
-
-sum = 0
-j = 0
-for j in range(N_ITEMS) :
-    sum = sum+values[j]
-
-print("value :", sum)
-
-
-
-
-M = 400 #size of the knacksack
 
 
 finalWeight = 0
@@ -46,40 +7,52 @@ finalValue = 0
 X = []
 Y = []
 
-def banchBound() :
+
+def banchBound(list_objects) :
     currentValue = 0
     currentWeight = 0
     i = 0 #index of item
-    banchBoundRec(currentValue, currentWeight, 0)
+
+    start = time.time()
+    banchBoundRec(list_objects,currentValue, currentWeight, 0)
+    end = time.time()
+
+    finalObjects = []
+    for i in range(len(X)):
+        if (X[i] == 1):
+            finalObjects.append(list_objects[i])
+
+    return (start - end), finalObjects, finalValue
 
 
 
+    
 
 
-def banchBoundRec(currentValue, currentWeight, i) :
-    global values, weights, M, finalWeight, finalValue, X, Y
+def banchBoundRec(list_objects, currentValue, currentWeight, i) :
+    global W, finalWeight, finalValue, X, Y
 
 
-    if(currentWeight + weights[i] <= M):
+    if(currentWeight + list_objects[i][1] <= W):
         Y[i] = 1
 
         if(i < N_ITEMS-1):
-            banchBoundRec(currentValue + values[i], currentWeight + weights[i], i+1)
+            banchBoundRec(list_objects, currentValue + list_objects[i][0], currentWeight + list_objects[i][1], i+1)
 
-        if((currentValue + values[i] > finalValue) and (i == N_ITEMS-1)) :
-            finalValue = currentValue + values[i]
-            finalWeight = currentWeight + weights[i]
+        if((currentValue + list_objects[i][0] > finalValue) and (i == N_ITEMS-1)) :
+            finalValue = currentValue + list_objects[i][0]
+            finalWeight = currentWeight + list_objects[i][1]
             X = []
             for j in Y :
                 X.append(j)
 
             
             
-    if (bound(currentValue, currentWeight, i) >= finalValue) :
+    if (bound(list_objects, currentValue, currentWeight, i) >= finalValue) :
         Y[i] = 0
 
         if(i < N_ITEMS-1) :
-            banchBoundRec(currentValue, currentWeight, i+1)
+            banchBoundRec(list_objects, currentValue, currentWeight, i+1)
 
         if((currentValue > finalValue) and (i == N_ITEMS-1)) :
             finalValue = currentValue
@@ -92,14 +65,14 @@ def banchBoundRec(currentValue, currentWeight, i) :
 
 
 
-def bound(currentValue, currentWeight, i) :
-    global values, weights, M, finalWeight, finalValue, X, Y
+def bound(list_objects, currentValue, currentWeight, i) :
+    global W, finalWeight, finalValue, X, Y
     v = currentValue
     w = currentWeight
     for j in range(i+1, N_ITEMS) :
-        if (w + weights[j] <= M):
-            w = w + weights[j]
-            v = v + values[j]
+        if (w + list_objects[j][1] <= W):
+            w = w + list_objects[j][1]
+            v = v + list_objects[j][0]
     return v
 
 
@@ -108,28 +81,54 @@ def bound(currentValue, currentWeight, i) :
 
 
 
-while len(Y) < N_ITEMS:
-    Y.append(0)
 
 
-print()
 
-start = time.time()
-banchBound()
-end = time.time()
+if __name__=="__main__":
+    file = input("file name : ")
 
-print ("Final Weight: ", finalWeight)
-print ("Final Value: ", finalValue)
-print ("Items: ", X)
+    with open(file, "r") as f:
+        data = f.read()
+        line = data.split("\n")
+        
+    # First with the number of object and the capacity of the knapsack
+    nbo, ksc = line[0].split()
+        
+    N_ITEMS = int(nbo) # number of object
+    W = int(ksc) # Maximum weight
 
-Z=[]
-j = 0
-for j in range(N_ITEMS) :
-    if(X[j]):
-        Z.append(items[j])
+    # Proceeding every object and giving the time needed to process the file
+    list_objects = [] 
+    for i in range(1, N_ITEMS+1):
+        oval, owei = line[i].split()
+        list_objects.append((int(oval), int(owei)))
+    else :
+        print("Finished loading the objects !\n")
 
-print("Item Names :", Z)
 
-print()
-print("time : ", (end-start))
-print("------------- END -----------")
+    
+
+    while len(Y) < N_ITEMS:
+        Y.append(0)
+
+    
+    list_objects = sorted(list_objects, key= lambda x : -x[0]/x[1])
+
+    temps, finalObjects, finalValue = banchBound(list_objects)
+
+    print(finalObjects)
+    print("final value :", finalValue)
+
+    print("\ntemps :", temps)
+
+
+
+
+
+
+    
+        
+        
+        
+        
+        
