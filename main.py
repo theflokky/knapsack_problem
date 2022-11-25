@@ -313,13 +313,16 @@ if __name__ == "__main__":
                     #
                     # Number of objects Number of dimension (M) Optimal solution (0 if none) 
                     # 
-                    # P1 W1D1 W1D2 ... W1DM
-                    #    . . .
-                    # Pn WnD1 WnD2 ... WnDM
+                    # P1 ... Pn
+                    # W1D1 ... W1DM
+                    #   ...
+                    # WnD1 ... WnDM
+                    #
+                    # KD1 ... KDM
                     #
                     # With Pn the profit (value) of the object
                     # and WnDM the weight in the M dimension for this object
-                    #
+                    # and KDM the capacity of the knapsack for dimension M
                     
                     # Let's read the file
                     print("Starting reading the file !")
@@ -342,21 +345,29 @@ if __name__ == "__main__":
 
                     # Checking all objects
                     acc = 0
+                    i = 0
                     for l in line[1:]:
-                        # getting all objects and their profit
-                        if len(list_objects) < n:
-                            for w in l.split():
-                                object.append(int(w))
-                                acc+=1
-                                if acc == ndim+1:
-                                    list_objects.append(object)
-                                    acc = 0
-                                    object = []
-                        else:
-                            # Getting the knapsack capacity             
-                            for w in l.split():    
-                                ksc.append(int(w))
+                        for w in l.split() :
+                            # Including all object with their profit
+                            if len(list_objects) < n:
+                                object = (int(w), [])
+                                list_objects.append(object)
 
+                            # Imputing all other data
+                            else:
+                                if i < n:
+                                    # Getting every weight for every dimension
+                                    list_objects[i][1].append(int(w))
+                                    acc+=1
+                                    # We got every weight of object i
+                                    if acc == ndim:
+                                        acc = 0
+                                        i+=1
+                                else :
+                                    # Getting the knapsack capacity               
+                                        ksc.append(int(w))
+
+                    print(list_objects, len(list_objects), ksc, len(ksc))      
                     # We ask which algorithm you want to run
                     algo = input("Which algorithm do you wish to run this data set on ?\nAvailable algorithms are :\n\tGreedy by value : \"gbv\"\n\tGreedy by weight : \"gbw\"\n\tGreedy : \"greed\"\n\tAnt algorithm : \"ant\"\n\tBrute Force : \"bf\"\nPlease enter your selection by writing the code next to the algorithm of your choice...\n")
                     match algo:

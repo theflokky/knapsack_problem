@@ -1,5 +1,7 @@
 import sys
 import random
+import os
+
 param = {'nbitems' : 0,
               'capacity' : 0,
               'minvalue' : 0,
@@ -20,6 +22,7 @@ def generate_file() -> str:
 
 
 if __name__ == "__main__":
+    print(os.getcwd(), os.path.dirname(os.path.abspath(__file__)))
     try :
         del sys.argv[0]
         for idx, key in enumerate(param):
