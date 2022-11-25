@@ -5,6 +5,7 @@ import greedy.greedy_weight as greedyW
 import greedy.greedy as greedy
 import ant_colony.ant_colony as ant
 import brute_force.brute_force as bruteForce
+import branch_and_bound.branch_and_bound as branch
 
 
 class App() :
@@ -216,33 +217,60 @@ class App() :
             self.nb_ant.grid(column=175,row=9)
 
     def launch(self,*args):
-
+        pb = self.list_knapsnack_problem.get()
         al = self.list_algos.get()
         way = self.list_type_file.get()
         file = self.list_files.get()
-        path = "test_files/" + way + "/"+ file
-        n,wmax,list_objects = load(path)
-        match al:
-            case "ant_colony" :
-                if str(self.nb_ant.get()).isnumeric() :
-                    nb = int(self.nb_ant.get())
-                else :
-                    nb = 30
-                t,obj,value = ant.ant(list_objects,nb,n,wmax)
-            case "branch_and_bound" :
-                print("à faire")
-            case "brute_force" :
-                t,obj,value = bruteForce.bruteForce(wmax,list_objects)
-            case "dynamic_programming" :
-                print("à faire")
-            case "greedy_value" :
-                t,obj,value = greedyV.greedy_value_01(list_objects,wmax)
-            case "greedy_weight" :
-                t,obj,value = greedyW.greedy_weight_01(list_objects,wmax)
-            case "greedy" :
-                t,obj,value = greedy.greedy_01(list_objects,wmax)
-            case _ :
-                print("defaut")
+
+        match pb :
+            case "0/1" :
+                n,wmax,list_objects = load(way,file)
+                match al:
+                    case "ant_colony" :
+                        if str(self.nb_ant.get()).isnumeric() :
+                            nb = int(self.nb_ant.get())
+                        else :
+                            nb = 30
+                        t,obj,value = ant.ant(list_objects,nb,n,wmax)
+                    case "branch_and_bound" :
+                        t,obj,value = branch.banchBound(n, wmax, list_objects)
+                    case "brute_force" :
+                        t,obj,value = bruteForce.bruteForce(wmax,list_objects)
+                    case "dynamic_programming" :
+                        print("à faire")
+                    case "greedy_value" :
+                        t,obj,value = greedyV.greedy_value_01(list_objects,wmax)
+                    case "greedy_weight" :
+                        t,obj,value = greedyW.greedy_weight_01(list_objects,wmax)
+                    case "greedy" :
+                        t,obj,value = greedy.greedy_01(list_objects,wmax)
+                    case _ :
+                        print("defaut")
+            case "multidimensional" :
+                n,ksc,ndim,list_objects = load_multi(way,file)
+                match al:
+                    case "ant_colony" :
+                        if str(self.nb_ant.get()).isnumeric() :
+                            nb = int(self.nb_ant.get())
+                        else :
+                            nb = 30
+                        t,obj,value = ant.ant_multid(list_objects, ndim, nb, n, ksc)
+                    case "branch_and_bound" :
+                        print("à faire")
+                    case "brute_force" :
+                        t,obj,value = bruteForce.bruteForce(wmax,list_objects)
+                    case "dynamic_programming" :
+                        print("à faire")
+                    case "greedy_value" :
+                        t,obj,value = greedyV.greedy_value_01(list_objects,wmax)
+                    case "greedy_weight" :
+                        t,obj,value = greedyW.greedy_weight_01(list_objects,wmax)
+                    case "greedy" :
+                        t,obj,value = greedy.greedy_01(list_objects,wmax)
+                    case _ :
+                        print("defaut")
+
+
 
         o = ""
         if len(obj)> 100 :
@@ -266,7 +294,8 @@ class App() :
         self.value.configure(text="Value : " + str(value))
         self.value.grid(column=175,row=14)
 
-def load(path):
+def load(way,file):
+    path = "test_files/" + way + "/"+ file
     with open(path, "r") as f:
         data = f.read()
         line = data.split("\n")
@@ -281,6 +310,43 @@ def load(path):
         oval, owei = line[i].split()
         list_objects.append((int(oval), int(owei)))
     return n,wmax,list_objects
+
+def load_multi(way,file):
+    path = "test_files/All-MKP-Instances/" + way + "/"+ file
+    with open(path, "r") as f:
+        data = f.read()
+        line = data.split("\n")
+
+    # Starting to gather data
+    nbo, ndim, opti_sol = line[0].split()
+
+    n = int(nbo)
+    ndim = int(ndim)
+    ksc = []
+    # In order to gather one object at a time
+    object = []
+
+    # Receiving container
+    list_objects = []
+
+    # Checking all objects
+    acc = 0
+    for l in line[1:]:
+        # getting all objects and their profit
+        if len(list_objects) < n:
+            for w in l.split():
+                object.append(int(w))
+                acc+=1
+                if acc == ndim+1:
+                    list_objects.append(object)
+                    acc = 0
+                    object = []
+        else:
+            # Getting the knapsack capacity             
+            for w in l.split():    
+                ksc.append(int(w))
+    
+    return n,ksc,ndim,list_objects
 
 root = tk.Tk()
 App(root)

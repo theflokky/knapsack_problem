@@ -11,7 +11,7 @@ Y = []
 
 
 def banchBound(nbObjects, w, list_objects) :
-    global NB_ITEMS, W, X
+    global NB_ITEMS, W, X, Y
 
     NB_ITEMS = nbObjects
     W = w
@@ -20,7 +20,13 @@ def banchBound(nbObjects, w, list_objects) :
     currentWeight = 0
     i = 0 #index of item
 
+    list_objects = sorted(list_objects, key= lambda x : -x[0]/x[1])
+
     start = time.time()
+    
+    while len(Y) < NB_ITEMS:
+        Y.append(0)
+
     banchBoundRec(list_objects,currentValue, currentWeight, 0)
     end = time.time()
 
@@ -43,10 +49,10 @@ def banchBoundRec(list_objects, currentValue, currentWeight, i) :
     if(currentWeight + list_objects[i][1] <= W):
         Y[i] = 1
 
-        if(i < N_ITEMS-1):
+        if(i < NB_ITEMS-1):
             banchBoundRec(list_objects, currentValue + list_objects[i][0], currentWeight + list_objects[i][1], i+1)
 
-        if((currentValue + list_objects[i][0] > finalValue) and (i == N_ITEMS-1)) :
+        if((currentValue + list_objects[i][0] > finalValue) and (i == NB_ITEMS-1)) :
             finalValue = currentValue + list_objects[i][0]
             finalWeight = currentWeight + list_objects[i][1]
             X = []
@@ -58,10 +64,10 @@ def banchBoundRec(list_objects, currentValue, currentWeight, i) :
     if (bound(list_objects, currentValue, currentWeight, i) >= finalValue) :
         Y[i] = 0
 
-        if(i < N_ITEMS-1) :
+        if(i < NB_ITEMS-1) :
             banchBoundRec(list_objects, currentValue, currentWeight, i+1)
 
-        if((currentValue > finalValue) and (i == N_ITEMS-1)) :
+        if((currentValue > finalValue) and (i == NB_ITEMS-1)) :
             finalValue = currentValue
             finalWeight = currentWeight
             X = []
@@ -76,7 +82,7 @@ def bound(list_objects, currentValue, currentWeight, i) :
     global NB_ITEMS, W, finalWeight, finalValue, X, Y
     v = currentValue
     w = currentWeight
-    for j in range(i+1, N_ITEMS) :
+    for j in range(i+1, NB_ITEMS) :
         if (w + list_objects[j][1] <= W):
             w = w + list_objects[j][1]
             v = v + list_objects[j][0]
