@@ -388,9 +388,9 @@ if __name__ == "__main__":
                             #    f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
                         case "bf":
                             print("Will it be developped on day ?")
-                            #timer, final_knapsack, final_value = bruteForce.bruteForce(wmax, list_objects)
-                            #print(
-                            #    f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
+                            timer, final_knapsack, final_value = bruteForce.bruteForceMultiDimensional(ksc, list_objects)
+                            print(
+                                f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
                         case _:
                             print(
                                 "Unknown value was inputed, please try again. To quit press 'q'\n")

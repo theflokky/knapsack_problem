@@ -63,7 +63,7 @@ def bruteForce(maxWeight, objectList):
             # If the bit is a 1
             if bit:
                 # Update of currentWeight
-                currentWeigth += objectList[index][1]
+                currentWeight += objectList[index][1]
                 # Verification that currentWeight doesn't exceed maxWeight
                 if currentWeight <= maxWeight:
                     currentValue += objectList[index][0]
@@ -85,3 +85,73 @@ def bruteForce(maxWeight, objectList):
             finalKnapsack.append(objectList[i])
 
     return ((endTime - startTime), finalKnapsack, currentBest[1])
+
+def initializationOfList(size, list):
+    for i in range(size):
+        list.append(0)
+    return list
+
+def bruteForceMultiDimensional(ksc, objectList):
+    """
+    Main Function implementing the Brute Force Algorihm on the MultiDimensional Knapsack Problem.
+    
+    """
+    print(ksc)
+    # Starting timer
+    startTime = time.time()
+
+    nbDimension = len(ksc)
+
+    currentBest = (0, -1)
+
+
+    #Generate All Possibilities
+    allPossibilities = generateAllPossibilities(len(objectList))
+
+
+    #parcours de toutes les possibilités
+    for currentPossibility, possibility in enumerate(allPossibilities):
+        currentWeight = initializationOfList(nbDimension, [])
+        currentValue = 0
+
+        for index, bit in enumerate(possibility):
+            exit = 0
+            alreadyAdded = 0
+            #We add the object to the list
+            for dimension in range(nbDimension):
+                if bit:
+                    currentWeight[dimension] += objectList[index][dimension+1]
+
+                    #cela rentre dans le sac
+                    if(currentWeight[dimension] <= ksc[dimension]):
+                        if(alreadyAdded == 0):
+                            currentValue += objectList[index][0]
+                            alreadyAdded = 1
+                    else:
+                        exit=1
+                        break
+            if(exit == 1):
+                break
+                    
+
+        if (currentValue > currentBest[1]):
+            currentBest = (currentPossibility, currentValue)
+        
+        
+    # Ending the timer
+    endTime = time.time()
+
+    # Reconstitution of the knapsack for displaying purposes
+    finalKnapsack = []
+    for i, obj in enumerate(allPossibilities[currentBest[0]]):
+        if (obj == 1):
+            finalKnapsack.append(objectList[i])
+
+    return ((endTime - startTime), finalKnapsack, currentBest[1])
+
+    
+            
+                
+
+
+            
