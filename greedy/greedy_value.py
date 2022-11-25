@@ -103,7 +103,7 @@ def greedy_value_01(lo, w):
 
 
     #Short life time list to prevent losing info
-    lot = lo
+    lot = lo[:]
     #Current availabilty of the knapsack
     cw = w
 
@@ -126,5 +126,44 @@ def greedy_value_01(lo, w):
             break
 
     end_process = time.time()
+
+    return (end_process - start_process), loiks, fv
+
+
+#  HERE STANDS THE MULTIDIM VERSION
+
+
+
+def greedy_value_multi(lo, kw):
+
+
+    start_process = time.time()
+
+    #Short life time list to prevent losing info
+    lot = lo
+
+    #Current availabilty of the knapsack
+    cw = kw[:]
+
+    #Current list of object inside the knapsack
+    loiks = []
+
+    #Final value of the knapsack
+    fv = 0
+
+    # As the greedy by value checks for the same thing as the 0/1 version, there's no need to re-work the algorithm
+    timsort_01(lot)
+
+    for i in range (0, len(lot)):
+        for j in range (0, len(lot[i][1])):
+            if cw[j] - lot[i][1][j] < 0:
+                break
+        else :
+            fv += int(lot[i][0])
+            cw = [initial - object_weight for initial, object_weight in zip(cw, lot[i][1])]
+            loiks.append(lot[i])
+
+    end_process = time.time()
+
 
     return (end_process - start_process), loiks, fv
