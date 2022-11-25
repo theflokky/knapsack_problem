@@ -1,6 +1,8 @@
 import time
 
 
+NB_ITEMS = 0
+W = 0
 
 finalWeight = 0
 finalValue = 0
@@ -8,7 +10,12 @@ X = []
 Y = []
 
 
-def banchBound(list_objects) :
+def banchBound(nbObjects, w, list_objects) :
+    global NB_ITEMS, W, X
+
+    NB_ITEMS = nbObjects
+    W = w
+
     currentValue = 0
     currentWeight = 0
     i = 0 #index of item
@@ -30,7 +37,7 @@ def banchBound(list_objects) :
 
 
 def banchBoundRec(list_objects, currentValue, currentWeight, i) :
-    global W, finalWeight, finalValue, X, Y
+    global NB_ITEMS, W, finalWeight, finalValue, X, Y
 
 
     if(currentWeight + list_objects[i][1] <= W):
@@ -66,7 +73,7 @@ def banchBoundRec(list_objects, currentValue, currentWeight, i) :
 
 
 def bound(list_objects, currentValue, currentWeight, i) :
-    global W, finalWeight, finalValue, X, Y
+    global NB_ITEMS, W, finalWeight, finalValue, X, Y
     v = currentValue
     w = currentWeight
     for j in range(i+1, N_ITEMS) :
@@ -114,7 +121,7 @@ if __name__=="__main__":
     
     list_objects = sorted(list_objects, key= lambda x : -x[0]/x[1])
 
-    temps, finalObjects, finalValue = banchBound(list_objects)
+    temps, finalObjects, finalValue = banchBound(NB_ITEMS, W, list_objects)
 
     print(finalObjects)
     print("final value :", finalValue)
