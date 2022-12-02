@@ -137,11 +137,9 @@ def grasp_main(lo, nbI, w):
     for i in range(nbI):
 
         l, v = greedy_randomised_construction(lo, w)
-        print(f"Seen random value : {v} at step {i}")
 
 
         if v > best:
-            print("A better solution as been found")
             best = v
             solution = l[:]
 
