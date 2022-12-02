@@ -31,7 +31,7 @@ def banchBound(nbObjects, w, list_objects) :
     end = time.time()
 
     finalObjects = []
-    for i in range(len(X)):
+    for i in range(len(list_objects)):
         if (X[i] == 1):
             finalObjects.append(list_objects[i])
 
