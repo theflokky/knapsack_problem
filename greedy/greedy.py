@@ -235,15 +235,47 @@ def greedy_multi(lo, kw):
 
     # Getting every objects
     for i in range (0, len(lot)):
+        print(f"At the start of process {cw} and object is {lot[i]}")
+        possible = True
         for j in range (0, len(lot[i][1])):
-            if cw[j] - lot[i][1][j] < 0:
-                break
-        else :
+            if possible:
+                if cw[j] - lot[i][1][j] < 0:
+                    print(f"Object doesn't fit the sets for dimension {j}, object was {lot[i]} we try to reduce {cw[j]} by {lot[i][1][j]}")
+                    possible = False
+                else :
+                    cw[j]
+        print(f"Adding the object is {possible}")
+        if possible:
+            
             fv += int(lot[i][0])
+            print(f"{cw} and {lot[i][1]}")
             cw = [initial - object_weight for initial, object_weight in zip(cw, lot[i][1])]
             loiks.append(lot[i])
 
+    #verif_totaux_init = [0] * len(cw)
+    #verif_totaux_sac = [0] * len(cw)
+    #acc = 0
+    #for i in lot:
+    #    for j in i[1]:
+    #        verif_totaux_init[acc] += j
+    #        acc+= 1
+    #    acc = 0
+#
+    #acc = 0
+    #for i in loiks:
+    #    for j in i[1]:
+    #        verif_totaux_sac[acc] += j
+    #        acc += 1
+    #    acc = 0
+#
+    #print(verif_totaux_init,verif_totaux_sac, kw)
+#
+    #acc = 0
+    #for i in kw:
+    #    print(f"{i} {i - verif_totaux_sac[acc]} {verif_totaux_sac[acc]}")
+    #    acc+=1
 
+    
     end_process = time.time()
 
     return (end_process - start_process), loiks, fv

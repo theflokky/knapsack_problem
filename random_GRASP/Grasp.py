@@ -120,8 +120,11 @@ def greedy_randomised_construction(lo, kc):
             cw -= chosen_object[1]
             final_value += chosen_object[0]
 
-
         lt.pop(lt.index(chosen_object))
+
+    
+
+    
 
     return final_list, final_value
 
@@ -270,6 +273,30 @@ def greedy_randomised_construction_multi(lo, kc):
 
 
         lt.pop(lt.index(chosen_object))
+
+
+    #verif_totaux_init = [0] * len(cw)
+    #verif_totaux_sac = [0] * len(cw)
+    #acc = 0
+    #for i in lo:
+    #    for j in i[1]:
+    #        verif_totaux_init[acc] += j
+    #        acc+= 1
+    #    acc = 0
+#
+    #acc = 0
+    #for i in final_list:
+    #    for j in i[1]:
+    #        verif_totaux_sac[acc] += j
+    #        acc += 1
+    #    acc = 0
+#
+    #print(verif_totaux_init,"\n",verif_totaux_sac,"\n", kc)
+#
+    #acc = 0
+    #for i in kc:
+    #    print(f"{i} {i - verif_totaux_sac[acc]} {verif_totaux_sac[acc]}")
+    #    acc+=1
 
     return final_list, final_value
 
