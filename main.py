@@ -5,6 +5,7 @@ import greedy.greedy_weight as greedyW
 import greedy.greedy as greedy
 import ant_colony.ant_colony as ant
 import brute_force.brute_force as bruteForce
+import random_GRASP.Grasp as grasp
 
 
 if __name__ == "__main__":
@@ -272,7 +273,7 @@ if __name__ == "__main__":
                     print(list_objects)
                     print("\n")
                     # We ask which algorithm you want to run
-                    algo = input("Which algorithm do you wish to run this data set on ?\nAvailable algorithms are :\n\tGreedy by value : \"gbv\"\n\tGreedy by weight : \"gbw\"\n\tGreedy : \"greed\"\n\tAnt algorithm : \"ant\"\n\tBrute Force : \"bf\"\nPlease enter your selection by writing the code next to the algorithm of your choice...\n")
+                    algo = input("Which algorithm do you wish to run this data set on ?\nAvailable algorithms are :\n\tGreedy by value : \"gbv\"\n\tGreedy by weight : \"gbw\"\n\tGreedy : \"greed\"\n\tAnt algorithm : \"ant\"\n\tBrute Force : \"bf\"\n\tGRASP : \"grasp\"\nPlease enter your selection by writing the code next to the algorithm of your choice...\n")
                     match algo:
                         # Going with the greedy by value algorithm
                         case "gbv":
@@ -303,6 +304,11 @@ if __name__ == "__main__":
                             timer, final_knapsack, final_value = bruteForce.bruteForce(wmax, list_objects)
                             print(
                                 f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
+                        case "grasp":
+                            print("Processing with \"Grasp\"")
+                            nbIte = int(input("How many iterations : "))
+                            timer, final_knapsack, final_value = grasp.grasp(list_objects, nbIte, wmax)
+                            print(f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
                         case _:
                             print(
                                 "Unknown value was inputed, please try again. To quit press 'q'\n")
@@ -369,7 +375,7 @@ if __name__ == "__main__":
 
                     print(list_objects, len(list_objects), ksc, len(ksc))      
                     # We ask which algorithm you want to run
-                    algo = input("Which algorithm do you wish to run this data set on ?\nAvailable algorithms are :\n\tGreedy by value : \"gbv\"\n\tGreedy by weight : \"gbw\"\n\tGreedy : \"greed\"\n\tAnt algorithm : \"ant\"\n\tBrute Force : \"bf\"\nPlease enter your selection by writing the code next to the algorithm of your choice...\n")
+                    algo = input("Which algorithm do you wish to run this data set on ?\nAvailable algorithms are :\n\tGreedy by value : \"gbv\"\n\tGreedy by weight : \"gbw\"\n\tGreedy : \"greed\"\n\tBrute Force : \"bf\"\n\tGRASP : \"grasp\"\nPlease enter your selection by writing the code next to the algorithm of your choice...\n")
                     match algo:
                         # Going with the greedy by value algorithm
                         case "gbv":
@@ -402,6 +408,11 @@ if __name__ == "__main__":
                             timer, final_knapsack, final_value = bruteForce.bruteForceMultiDimensional(ksc, list_objects)
                             print(
                                 f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
+                        case "grasp":
+                            print("Processing with \"Grasp\"")
+                            nbIte = int(input("How many iterations : "))
+                            timer, final_knapsack, final_value = grasp.grasp_multi(list_objects, nbIte, ksc)
+                            print(f"The process took : {timer}s for execution\nThe knapsack contains these objects : {final_knapsack}\nFor a value of : {final_value}")
                         case _:
                             print(
                                 "Unknown value was inputed, please try again. To quit press 'q'\n")
