@@ -6,86 +6,97 @@ W = 0
 
 finalWeight = 0
 finalValue = 0
-X = []
-Y = []
+finalSolution = []
+tempSolution = []
 
 
-def banchBound(nbObjects, w, list_objects) :
-    global NB_ITEMS, W, X, Y
+def banchBound(nbObjects, w, listObjects) :
+    global NB_ITEMS, W, finalSolution, tempSolution
 
     NB_ITEMS = nbObjects
     W = w
 
     currentValue = 0
     currentWeight = 0
-    i = 0 #index of item
+    i = 0 # index of item
 
-    list_objects = sorted(list_objects, key= lambda x : -x[0]/x[1])
-
+    # start for execution time
     start = time.time()
-    
-    while len(Y) < NB_ITEMS:
-        Y.append(0)
 
-    banchBoundRec(list_objects,currentValue, currentWeight, 0)
+    # sort items by value/weight
+    listObjects = sorted(listObjects, key= lambda x : -x[0]/x[1])
+    
+    # initialisation
+    while len(tempSolution) < NB_ITEMS:
+        tempSolution.append(0)
+
+    # call of the recursive function
+    banchBoundRec(listObjects,currentValue, currentWeight, 0)
+
+    # preparing returned data
+    finalObjects = []
+    for i in range(len(listObjects)):
+        if (finalSolution[i] == 1):
+            finalObjects.append(listObjects[i])
+
+    # end for execution time
     end = time.time()
 
-    finalObjects = []
-    for i in range(len(list_objects)):
-        if (X[i] == 1):
-            finalObjects.append(list_objects[i])
 
     return (start - end), finalObjects, finalValue
 
 
 
     
+# description
+def banchBoundRec(listObjects, currentValue, currentWeight, i) :
+    global NB_ITEMS, W, finalWeight, finalValue, finalSolution, tempSolution
 
 
-def banchBoundRec(list_objects, currentValue, currentWeight, i) :
-    global NB_ITEMS, W, finalWeight, finalValue, X, Y
+    # if the current object i can be taken
+    if(currentWeight + listObjects[i][1] <= W):
 
+        tempSolution[i] = 1 # we take this object
 
-    if(currentWeight + list_objects[i][1] <= W):
-        Y[i] = 1
-
+        # if the current object is not the last item, we continue with the following item
         if(i < NB_ITEMS-1):
-            banchBoundRec(list_objects, currentValue + list_objects[i][0], currentWeight + list_objects[i][1], i+1)
+            banchBoundRec(listObjects, currentValue + listObjects[i][0], currentWeight + listObjects[i][1], i+1)
 
-        if((currentValue + list_objects[i][0] > finalValue) and (i == NB_ITEMS-1)) :
-            finalValue = currentValue + list_objects[i][0]
-            finalWeight = currentWeight + list_objects[i][1]
-            X = []
-            for j in Y :
-                X.append(j)
+        # if it is the last object and the current value is better than the final value, we save the current solution
+        if((i == NB_ITEMS-1) and (currentValue + listObjects[i][0] > finalValue)) :
+            finalValue = currentValue + listObjects[i][0]
+            finalWeight = currentWeight + listObjects[i][1]
+            finalSolution = []
+            for j in tempSolution :
+                finalSolution.append(j)
 
             
-            
-    if (bound(list_objects, currentValue, currentWeight, i) >= finalValue) :
-        Y[i] = 0
+    
+    if (bound(listObjects, currentValue, currentWeight, i) >= finalValue) :
+        tempSolution[i] = 0
 
         if(i < NB_ITEMS-1) :
-            banchBoundRec(list_objects, currentValue, currentWeight, i+1)
+            banchBoundRec(listObjects, currentValue, currentWeight, i+1)
 
         if((currentValue > finalValue) and (i == NB_ITEMS-1)) :
             finalValue = currentValue
             finalWeight = currentWeight
-            X = []
-            for j in Y :
-                X.append(j)
+            finalSolution = []
+            for j in tempSolution :
+                finalSolution.append(j)
 
 
 
 
 
-def bound(list_objects, currentValue, currentWeight, i) :
-    global NB_ITEMS, W, finalWeight, finalValue, X, Y
+def bound(listObjects, currentValue, currentWeight, i) :
+    global NB_ITEMS, W, finalWeight, finalValue
     v = currentValue
     w = currentWeight
     for j in range(i+1, NB_ITEMS) :
-        if (w + list_objects[j][1] <= W):
-            w = w + list_objects[j][1]
-            v = v + list_objects[j][0]
+        if (w + listObjects[j][1] <= W):
+            w = w + listObjects[j][1]
+            v = v + listObjects[j][0]
     return v
 
 
@@ -106,28 +117,17 @@ if __name__=="__main__":
         
     # First with the number of object and the capacity of the knapsack
     nbo, ksc = line[0].split()
-        
-    N_ITEMS = int(nbo) # number of object
-    W = int(ksc) # Maximum weight
 
     # Proceeding every object and giving the time needed to process the file
-    list_objects = [] 
-    for i in range(1, N_ITEMS+1):
+    listObjects = [] 
+    for i in range(1, int(nbo)+1):
         oval, owei = line[i].split()
-        list_objects.append((int(oval), int(owei)))
+        listObjects.append((int(oval), int(owei)))
     else :
         print("Finished loading the objects !\n")
 
 
-    
-
-    while len(Y) < N_ITEMS:
-        Y.append(0)
-
-    
-    list_objects = sorted(list_objects, key= lambda x : -x[0]/x[1])
-
-    temps, finalObjects, finalValue = banchBound(NB_ITEMS, W, list_objects)
+    temps, finalObjects, finalValue = banchBound(int(nbo), int(ksc), listObjects)
 
     print(finalObjects)
     print("final value :", finalValue)
