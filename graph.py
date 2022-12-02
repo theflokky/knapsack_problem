@@ -13,7 +13,7 @@ personalAlgo = "'Personal Algorithm'"
 
 def graph(time, tests):
 
-    print("\n brute_force :     ", time["brute_force"], "\n branch_and_bound :", time["branch_and_bound"], "\n greedy :          ", time["greedy"], "\n dynamic :         ", time["dynamic_programming"], "\n polynomial :      ", time["polynomial"], "\n grasp :          ", time["grasp"], "\n grasp_value :          ", time["grasp_value"], "\n grasp_weight :          ", time["grasp_weight"], "\n ant_colony :      ", time["ant"], "\n personal :        ", time["personal"], "\n\n test files :      ", tests, flush=True)
+    print("\n brute_force :     ", time["brute_force"], "\n branch_and_bound :", time["branch_and_bound"], "\n greedy :          ", time["greedy"], "\n greedy_value :      ", time["greedy_value"], "\n greedy_weight :      ", time["greedy_weight"], "\n dynamic :         ", time["dynamic_programming"], "\n polynomial :      ", time["polynomial"], "\n grasp :            ", time["grasp"], "\n ant_colony :      ", time["ant"], "\n personal :        ", time["personal"], "\n\n test files :      ", tests, flush=True)
     print()
 
 
@@ -27,6 +27,12 @@ def graph(time, tests):
     if len(time["greedy"]) != 0 :
         plt.plot(tests, time["greedy"], label = 'Greedy', marker = '.', color = 'limegreen')
 
+    if len(time["greedy_value"]) != 0 :
+        plt.plot(tests, time["greedy_value"], label = 'Greedy Value', marker = '.', color = 'c')
+
+    if len(time["greedy_weight"]) != 0 :
+        plt.plot(tests, time["greedy_weight"], label = 'Greedy Weight', marker = '.', color = 'c')
+
     if len(time["dynamic_programming"]) != 0 :
         plt.plot(tests, time["dynamic_programming"], label = 'Dynamic', marker = '.', color = 'r')
     
@@ -35,12 +41,6 @@ def graph(time, tests):
     
     if len(time["grasp"]) != 0 :
         plt.plot(tests, time["grasp"], label = 'Grasp', marker = '.', color = 'c')
-
-    if len(time["grasp_value"]) != 0 :
-        plt.plot(tests, time["grasp_value"], label = 'Grasp Value', marker = '.', color = 'c')
-
-    if len(time["grasp_weight"]) != 0 :
-        plt.plot(tests, time["grasp_weight"], label = 'Grasp Weight', marker = '.', color = 'c')
     
     if len(time["ant"]) != 0 :
         plt.plot(tests, time["ant"], label = 'Ant colony', marker = '.', color = 'hotpink')
