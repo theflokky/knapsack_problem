@@ -4,7 +4,7 @@ Brute Force Algorithm Implementation.
 
 #Imports
 import time
-
+import sys
 ###FUNCTION DECLARATIONS###
 
 def generateAllPossibilities(n):
@@ -23,6 +23,7 @@ def generateAllPossibilities(n):
     l = [[0], [1]]
     start = 0
     for i in range(1, n):
+        print(f"Ca progresse t'inquiète : {i}")
         tmp = len(l)
         for element in l[start:]:
             l.append([0] + element)
@@ -96,7 +97,6 @@ def bruteForceMultiDimensional(ksc, objectList):
     Main Function implementing the Brute Force Algorihm on the MultiDimensional Knapsack Problem.
     
     """
-    print(ksc)
     # Starting timer
     startTime = time.time()
 
@@ -111,29 +111,26 @@ def bruteForceMultiDimensional(ksc, objectList):
 
     #parcours de toutes les possibilités
     for currentPossibility, possibility in enumerate(allPossibilities):
-        currentWeight = initializationOfList(nbDimension, [])
+        currentWeight = [0 for _ in range(nbDimension)]
+        #currentWeight = initializationOfList(nbDimension, [])
         currentValue = 0
-
+        if currentPossibility % 100000 == 0 : print(currentPossibility / len(allPossibilities),file = sys.stderr, flush=True)
+        
         for index, bit in enumerate(possibility):
-            exit = 0
-            alreadyAdded = 0
             #We add the object to the list
-            for dimension in range(nbDimension):
-                if bit:
-                    currentWeight[dimension] += objectList[index][dimension+1]
+            if bit:
+                for dimension in range(nbDimension):
+                
+                    currentWeight[dimension] += objectList[index][1][dimension]
 
                     #cela rentre dans le sac
-                    if(currentWeight[dimension] <= ksc[dimension]):
-                        if(alreadyAdded == 0):
-                            currentValue += objectList[index][0]
-                            alreadyAdded = 1
-                    else:
-                        exit=1
+                    if not (currentWeight[dimension] <= ksc[dimension]):
                         break
-            if(exit == 1):
+                else :
+                    currentValue += objectList[index][0]
+                    continue
                 break
                     
-
         if (currentValue > currentBest[1]):
             currentBest = (currentPossibility, currentValue)
         
@@ -146,6 +143,7 @@ def bruteForceMultiDimensional(ksc, objectList):
     for i, obj in enumerate(allPossibilities[currentBest[0]]):
         if (obj == 1):
             finalKnapsack.append(objectList[i])
+    print(currentBest)
 
     return ((endTime - startTime), finalKnapsack, currentBest[1])
 
