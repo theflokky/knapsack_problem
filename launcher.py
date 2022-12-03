@@ -1,3 +1,5 @@
+# apt-get install python3-tk
+
 import tkinter as tk
 import os
 import greedy.greedy_value as greedyV
@@ -6,20 +8,51 @@ import greedy.greedy as greedy
 import ant_colony.ant_colony as ant
 import brute_force.brute_force as bruteForce
 import branch_and_bound.branch_and_bound as branch
+import random_GRASP.Grasp as grasp
+import graph 
 
+class ChecklistBox(tk.Frame):
+    def __init__(self, parent, choices, **kwargs):
+        tk.Frame.__init__(self, parent, **kwargs)
+
+        self.vars = []
+        bg = self.cget("background")
+        for choice in choices:
+            var = tk.StringVar(value=choice)
+            self.vars.append(var)
+            cb = tk.Checkbutton(self, var=var, text=choice,
+                                onvalue=choice, offvalue="",
+                                anchor="w", width=20, background=bg,
+                                relief="flat", highlightthickness=0
+            )
+            cb.pack(side="top", fill="x", anchor="w")
+        
+
+    def getCheckedItems(self):
+        values = []
+        for var in self.vars:
+            value =  var.get()
+            if value:
+                values.append(value)
+        return values
 
 class App() :
     def __init__(self,parent) :
         self.parent = parent
         self.entry = tk.Entry(self.parent)
 
+        self.comp = {"ant_colony":[],"branch_and_bound":[],"brute_force":[],"dynamic_programming":[],"greedy_value":[],"greedy_weight":[],"greedy":[],"grasp":[],"polynomial":[],"personal":[]}
+        self.compF = []    
+
         self.parent.title("knapsack")
-        self.parent.geometry("1000x500")
+        self.parent.geometry("1000x800")
 
         self.knapsnack_problem = ["0/1","multidimensional"]
         self.type_file = ["low-dimensional","large_scale"]
         self.files = [f for f in os.listdir("test_files/low-dimensional")]
-        self.algos = ["ant_colony","branch_and_bound","brute_force","dynamic_programming","greedy_value","greedy_weight","greedy"]
+        self.algos = ["ant_colony","branch_and_bound","brute_force","dynamic_programming","greedy_value","greedy_weight","greedy","grasp","polynomial","personal","comp"]
+
+        self.choices = ["ant_colony","branch_and_bound","brute_force","dynamic_programming","greedy_value","greedy_weight","greedy","grasp"]
 
         # Option problem
         self.list_knapsnack_problem = tk.StringVar(self.parent)
@@ -53,8 +86,8 @@ class App() :
         self.all_files = tk.OptionMenu(self.parent,self.list_files, *self.files)
         self.all_files.grid(column=175,row=5)
 
-        self.label_ant = tk.Label(self.parent, text="How many ants ? (default = 30) ")
-        self.nb_ant = tk.Entry(self.parent)
+        self.label_ant = tk.Label(self.parent, text="How many interations ? (default = 30) ")
+        self.nb_iter = tk.Entry(self.parent)
 
         # Option algos
         self.list_algos = tk.StringVar(self.parent)
@@ -70,13 +103,18 @@ class App() :
         self.button = tk.Button(self.parent, text="Launch", command=self.launch)
         self.button.grid(column=175,row=10)
 
+        self.checklist = ChecklistBox(self.parent, self.choices, bd=1, relief="sunken", background="white")
+
         # Result
         self.time = tk.Label(self.parent,text="")
         self.obj = tk.Label(self.parent,text="")
         self.value = tk.Label(self.parent,text="")
 
+
     def set_problem(self,*args):
         pb = self.list_knapsnack_problem.get()
+        al = self.list_algos.get()
+        self.clear()
         for child in self.parent.winfo_children() :
             child.destroy()
         match pb :
@@ -118,15 +156,32 @@ class App() :
         self.button = tk.Button(self.parent, text="Launch", command=self.launch)
         self.button.grid(column=175,row=10)
 
-        self.label_ant = tk.Label(self.parent, text="How many ants ? (default = 30) ")
-        self.nb_ant = tk.Entry(self.parent)
+        self.label_ant = tk.Label(self.parent, text="How many iterations ? (default = 30) ")
+        self.nb_iter = tk.Entry(self.parent)
 
         self.time = tk.Label(self.parent,text="")
         self.obj = tk.Label(self.parent,text="")
         self.value = tk.Label(self.parent,text="")
 
+        if al == "ant_colony" or al == "grasp":
+            self.label_ant.grid(column=175,row=8)
+            self.nb_iter.grid(column=175,row=9)
+        
+        if al == "comp" :
+            self.checklist = ChecklistBox(self.parent, self.choices, bd=1, relief="sunken", background="white")
+            self.checklist.grid(column=175,row=8)
+
+            self.clearB = tk.Button(self.parent, text="Clear comp", command=self.clear)
+            self.clearB.grid(column=175,row=11)
+
+            self.showB = tk.Button(self.parent, text="Show graph", command=self.show)
+            self.showB.grid(column=176,row=11)
+
+
     def set_files(self,*args):
         ls = self.list_type_file.get()
+        al = self.list_algos.get()
+        self.clear()
         for child in self.parent.winfo_children() :
             child.destroy()
         match ls :
@@ -167,12 +222,26 @@ class App() :
         self.button = tk.Button(self.parent, text="Launch", command=self.launch)
         self.button.grid(column=175,row=10)
 
-        self.label_ant = tk.Label(self.parent, text="How many ants ? (default = 30) ")
-        self.nb_ant = tk.Entry(self.parent)
+        self.label_ant = tk.Label(self.parent, text="How many iterations ? (default = 30) ")
+        self.nb_iter = tk.Entry(self.parent)
 
         self.time = tk.Label(self.parent,text="")
         self.obj = tk.Label(self.parent,text="")
         self.value = tk.Label(self.parent,text="")
+
+        if al == "ant_colony" or al == "grasp":
+            self.label_ant.grid(column=175,row=8)
+            self.nb_iter.grid(column=175,row=9)
+
+        if al == "comp" :
+            self.checklist = ChecklistBox(self.parent, self.choices, bd=1, relief="sunken", background="white")
+            self.checklist.grid(column=175,row=8)
+
+            self.clearB = tk.Button(self.parent, text="Clear comp", command=self.clear)
+            self.clearB.grid(column=175,row=11)
+
+            self.showB = tk.Button(self.parent, text="Show graph", command=self.show)
+            self.showB.grid(column=176,row=11)
 
     def set_algo(self,*args):
         al = self.list_algos.get()
@@ -205,16 +274,27 @@ class App() :
         self.button = tk.Button(self.parent, text="Launch", command=self.launch)
         self.button.grid(column=175,row=10)
 
-        self.label_ant = tk.Label(self.parent, text="How many ants ? (default = 30) ")
-        self.nb_ant = tk.Entry(self.parent)
+        self.label_ant = tk.Label(self.parent, text="How many iterations ? (default = 30) ")
+        self.nb_iter = tk.Entry(self.parent)
 
         self.time = tk.Label(self.parent,text="")
         self.obj = tk.Label(self.parent,text="")
         self.value = tk.Label(self.parent,text="")
         
-        if al == "ant_colony" :
+        if al == "ant_colony" or al == "grasp":
             self.label_ant.grid(column=175,row=8)
-            self.nb_ant.grid(column=175,row=9)
+            self.nb_iter.grid(column=175,row=9)
+        
+        if al == "comp" :
+            self.checklist = ChecklistBox(root, self.choices, bd=1, relief="sunken", background="white")
+            self.checklist.grid(column=175,row=8)
+
+            self.clearB = tk.Button(self.parent, text="Clear comp", command=self.clear)
+            self.clearB.grid(column=175,row=11)
+
+            self.showB = tk.Button(self.parent, text="Show graph", command=self.show)
+            self.showB.grid(column=176,row=11)
+
 
     def launch(self,*args):
         pb = self.list_knapsnack_problem.get()
@@ -227,8 +307,8 @@ class App() :
                 n,wmax,list_objects = load(way,file)
                 match al:
                     case "ant_colony" :
-                        if str(self.nb_ant.get()).isnumeric() :
-                            nb = int(self.nb_ant.get())
+                        if str(self.nb_iter.get()).isnumeric() :
+                            nb = int(self.nb_iter.get())
                         else :
                             nb = 30
                         t,obj,value = ant.ant(list_objects,nb,n,wmax)
@@ -244,29 +324,100 @@ class App() :
                         t,obj,value = greedyW.greedy_weight_01(list_objects,wmax)
                     case "greedy" :
                         t,obj,value = greedy.greedy_01(list_objects,wmax)
+                    case "grasp" :
+                        if str(self.nb_iter.get()).isnumeric() :
+                            nb = int(self.nb_iter.get())
+                        else :
+                            nb = 30
+                        t,obj,value = grasp.grasp(list_objects, nb, wmax)
+                    case "comp" :
+                        tmp = self.checklist.getCheckedItems()
+                        self.compF.append(file)
+                        for a in tmp :
+                            match a :
+                                case "ant_colony" :
+                                    nb = 30
+                                    t,obj,value = ant.ant(list_objects,nb,n,wmax)
+                                    self.comp["ant_colony"].append(t)
+                                case "branch_and_bound" :
+                                    t,obj,value = branch.banchBound(n, wmax, list_objects)
+                                    self.comp["branch_and_bound"].append(t)
+                                case "brute_force" :
+                                    t,obj,value = bruteForce.bruteForce(wmax,list_objects)
+                                    self.comp["brute_force"].append(t)
+                                case "dynamic_programming" :
+                                    print("à faire")
+                                case "greedy_value" :
+                                    t,obj,value = greedyV.greedy_value_01(list_objects,wmax)
+                                    self.comp["greedy_value"].append(t)
+                                case "greedy_weight" :
+                                    t,obj,value = greedyW.greedy_weight_01(list_objects,wmax)
+                                    self.comp["greedy_weight"].append(t)
+                                case "greedy" :
+                                    t,obj,value = greedy.greedy_01(list_objects,wmax)
+                                    self.comp["greedy"].append(t)
+                                case "grasp" :
+                                    nb = 30
+                                    t,obj,value = grasp.grasp(list_objects, nb, wmax)
+                                    self.comp["grasp"].append(t)
                     case _ :
                         print("defaut")
             case "multidimensional" :
                 n,ksc,ndim,list_objects = load_multi(way,file)
                 match al:
                     case "ant_colony" :
-                        if str(self.nb_ant.get()).isnumeric() :
-                            nb = int(self.nb_ant.get())
+                        if str(self.nb_iter.get()).isnumeric() :
+                            nb = int(self.nb_iter.get())
                         else :
                             nb = 30
                         t,obj,value = ant.ant_multid(list_objects, ndim, nb, n, ksc)
                     case "branch_and_bound" :
                         print("à faire")
                     case "brute_force" :
-                        t,obj,value = bruteForce.bruteForce(wmax,list_objects)
+                        t,obj,value = bruteForce.bruteForceMultiDimensional(ksc,list_objects)
                     case "dynamic_programming" :
                         print("à faire")
                     case "greedy_value" :
-                        t,obj,value = greedyV.greedy_value_01(list_objects,wmax)
+                        t,obj,value = greedyV.greedy_value_multi(list_objects,ksc)
                     case "greedy_weight" :
-                        t,obj,value = greedyW.greedy_weight_01(list_objects,wmax)
+                        t,obj,value = greedyW.greedy_weight_multi(list_objects,ksc)
                     case "greedy" :
-                        t,obj,value = greedy.greedy_01(list_objects,wmax)
+                        t,obj,value = greedy.greedy_multi(list_objects,ksc)
+                    case "grasp" :
+                        if str(self.nb_iter.get()).isnumeric() :
+                            nb = int(self.nb_iter.get())
+                        else :
+                            nb = 30
+                        t,obj,value = grasp.grasp_multi(list_objects, nb, ksc)
+                    case "comp" :
+                        tmp = self.checklist.getCheckedItems()
+                        self.compF.append(file)
+                        for a in tmp :
+                            match a :
+                                case "ant_colony" :
+                                    nb = 30
+                                    t,obj,value = ant.ant_multid(list_objects, ndim, nb, n, ksc)
+                                    self.comp["ant_colony"].append(t)
+                                case "branch_and_bound" :
+                                    print("à faire")
+                                case "brute_force" :
+                                    t,obj,value = bruteForce.bruteForceMultiDimensional(ksc,list_objects)
+                                    self.comp["brute_force"].append(t)
+                                case "dynamic_programming" :
+                                    print("à faire")
+                                case "greedy_value" :
+                                    t,obj,value = greedyV.greedy_value_multi(list_objects,ksc)
+                                    self.comp["greedy_value"].append(t)
+                                case "greedy_weight" :
+                                    t,obj,value = greedyW.greedy_weight_multi(list_objects,ksc)
+                                    self.comp["greedy_weight"].append(t)
+                                case "greedy" :
+                                    t,obj,value = greedy.greedy_multi(list_objects,ksc)
+                                    self.comp["greedy"].append(t)
+                                case "grasp" :
+                                    nb = 30
+                                    t,obj,value = grasp.grasp_multi(list_objects, nb, ksc)
+                                    self.comp["grasp"].append(t)
                     case _ :
                         print("defaut")
 
@@ -293,6 +444,14 @@ class App() :
 
         self.value.configure(text="Value : " + str(value))
         self.value.grid(column=175,row=14)
+
+    def clear(self,*args):
+        self.comp = {"ant_colony":[],"branch_and_bound":[],"brute_force":[],"dynamic_programming":[],"greedy_value":[],"greedy_weight":[],"greedy":[],"grasp":[],"polynomial":[],"personal":[]}
+        self.compF = []
+    
+    def show(self,*args):
+        if self.compF:
+            graph.graph(self.comp, self.compF)
 
 def load(way,file):
     path = "test_files/" + way + "/"+ file
@@ -331,21 +490,29 @@ def load_multi(way,file):
 
     # Checking all objects
     acc = 0
+    i = 0
     for l in line[1:]:
-        # getting all objects and their profit
-        if len(list_objects) < n:
-            for w in l.split():
-                object.append(int(w))
-                acc+=1
-                if acc == ndim+1:
-                    list_objects.append(object)
-                    acc = 0
-                    object = []
-        else:
-            # Getting the knapsack capacity             
-            for w in l.split():    
-                ksc.append(int(w))
-    
+        for w in l.split() :
+            # Including all object with their profit
+            if len(list_objects) < n:
+                object = (int(w), [])
+                list_objects.append(object)
+
+            # Imputing all other data
+            else:
+                if i < n:
+                    # Getting every weight for every dimension
+                    list_objects[i][1].append(int(w))
+                    acc+=1
+                    # We got every weight of object i
+                    if acc == ndim:
+                        acc = 0
+                        i+=1
+                else :
+                    # Getting the knapsack capacity               
+                        ksc.append(int(w))
+
+                    
     return n,ksc,ndim,list_objects
 
 root = tk.Tk()

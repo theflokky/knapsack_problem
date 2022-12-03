@@ -174,7 +174,7 @@ def ant(list_objects,nbAnts,n,wmax):
         # Check if the current solution is better than the best solution
         if currentSolution["value"] > bestSolution["value"] :
             # Save the current solution in best solution
-            bestSolution = currentSolution
+            bestSolution = currentSolution.copy()
             
         # Evaporation of pheromones
         updatePhero(phero)
@@ -327,7 +327,7 @@ def ant_multid(list_objects,ndim,nbAnts,n,wmax):
         # Check if the current solution is better than the best solution
         if currentSolution["value"] > bestSolution["value"] :
             # Save the current solution in best solution
-            bestSolution = currentSolution
+            bestSolution = currentSolution.copy()
             
         # Evaporation of pheromones
         updatePhero(phero)
