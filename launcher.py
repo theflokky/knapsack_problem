@@ -149,6 +149,11 @@ class App() :
                 self.all_chubeas.grid(column=176,row=5)
 
                 self.algos = self.algos_muti
+                if al in self.algos_muti:
+                    print("oui")
+                    self.list_algos.set(al)
+                else :
+                    self.list_algos.set(self.algos[0])
 
         
         self.label_knapsnack = tk.Label(self.parent, text="Problem : ")
@@ -409,14 +414,6 @@ class App() :
                     file = ch
                 n,ksc,ndim,list_objects = load_multi(way,file)
                 match al:
-                    case "ant_colony" :
-                        if str(self.nb_iter.get()).isnumeric() :
-                            nb = int(self.nb_iter.get())
-                        else :
-                            nb = 30
-                        t,obj,value = ant.ant_multid(list_objects, ndim, nb, n, ksc)
-                    case "branch_and_bound" :
-                        print("à faire")
                     case "brute_force" :
                         t,obj,value = bruteForce.bruteForceMultiDimensional(ksc,list_objects)
                     case "dynamic_programming" :
