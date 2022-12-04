@@ -45,14 +45,18 @@ class App() :
         self.compF = []    
 
         self.parent.title("knapsack")
-        self.parent.geometry("1000x800")
+        self.parent.geometry("1200x800")
 
         self.knapsnack_problem = ["0/1","multidimensional"]
         self.type_file = ["low-dimensional","large_scale"]
         self.files = [f for f in os.listdir("test_files/low-dimensional")]
         self.algos = ["ant_colony","branch_and_bound","brute_force","dynamic_programming","greedy_value","greedy_weight","greedy","grasp","polynomial","personal","comp"]
 
-        self.choices = ["ant_colony","branch_and_bound","brute_force","dynamic_programming","greedy_value","greedy_weight","greedy","grasp"]
+        self.algos01 = ["ant_colony","branch_and_bound","brute_force","dynamic_programming","greedy_value","greedy_weight","greedy","grasp","polynomial","personal","comp"]
+        self.algos_muti = ["brute_force","greedy_value","greedy_weight","greedy","grasp","comp"]
+
+        self.chubeas = [f for f in os.listdir("test_files/All-MKP-Instances/chubeas/OR10x100")]
+        self.choices = []
 
         # Option problem
         self.list_knapsnack_problem = tk.StringVar(self.parent)
@@ -79,6 +83,7 @@ class App() :
         # Option files
         self.list_files = tk.StringVar(self.parent)
         self.list_files.set(self.files[0])
+        self.list_files.trace('w',self.set_chubeas)
     
         self.label_files = tk.Label(self.parent, text="Which file do you wish to work on ? ")
         self.label_files.grid(column=175,row=4)
@@ -103,7 +108,13 @@ class App() :
         self.button = tk.Button(self.parent, text="Launch", command=self.launch)
         self.button.grid(column=175,row=10)
 
+        self.choices = self.algos[:-1]
         self.checklist = ChecklistBox(self.parent, self.choices, bd=1, relief="sunken", background="white")
+
+        # Chubeas
+        self.list_chubeas = tk.StringVar(self.parent)
+        self.list_chubeas.set(self.chubeas[0])
+        self.all_chubeas = tk.OptionMenu(self.parent,self.list_chubeas,*self.chubeas)
 
         # Result
         self.time = tk.Label(self.parent,text="")
@@ -123,12 +134,22 @@ class App() :
                 self.type_file.append("low-dimensional")
                 self.type_file.append("large_scale")
                 self.files = [f for f in os.listdir("test_files/low-dimensional")]
+                self.algos = self.algos01
             case "multidimensional" :
                 self.type_file.clear()
                 self.type_file.append("chubeas")
                 self.type_file.append("gk")
                 self.type_file.append("sac94")
                 self.files = [f for f in os.listdir("test_files/All-MKP-Instances/chubeas")]
+                self.chubeas = [f for f in os.listdir("test_files/All-MKP-Instances/chubeas/OR10x100")]
+
+                self.list_chubeas = tk.StringVar(self.parent)
+                self.list_chubeas.set(self.chubeas[0]) 
+                self.all_chubeas = tk.OptionMenu(self.parent,self.list_chubeas,*self.chubeas)
+                self.all_chubeas.grid(column=176,row=5)
+
+                self.algos = self.algos_muti
+
         
         self.label_knapsnack = tk.Label(self.parent, text="Problem : ")
         self.label_knapsnack.grid(column=175,row=0)
@@ -163,11 +184,13 @@ class App() :
         self.obj = tk.Label(self.parent,text="")
         self.value = tk.Label(self.parent,text="")
 
+
         if al == "ant_colony" or al == "grasp":
             self.label_ant.grid(column=175,row=8)
             self.nb_iter.grid(column=175,row=9)
         
         if al == "comp" :
+            self.choices = self.algos[:-1]
             self.checklist = ChecklistBox(self.parent, self.choices, bd=1, relief="sunken", background="white")
             self.checklist.grid(column=175,row=8)
 
@@ -191,6 +214,9 @@ class App() :
                 self.files = [f for f in os.listdir("test_files/large_scale")]
             case "chubeas" :
                 self.files = [f for f in os.listdir("test_files/All-MKP-Instances/chubeas")]
+
+                self.all_chubeas = tk.OptionMenu(self.parent,self.list_chubeas, *self.chubeas)
+                self.all_chubeas.grid(column=176,row=5)
             case "gk" :
                 self.files = [f for f in os.listdir("test_files/All-MKP-Instances/gk")]
             case "sac94" :
@@ -234,6 +260,7 @@ class App() :
             self.nb_iter.grid(column=175,row=9)
 
         if al == "comp" :
+            self.choices = self.algos[:-1]
             self.checklist = ChecklistBox(self.parent, self.choices, bd=1, relief="sunken", background="white")
             self.checklist.grid(column=175,row=8)
 
@@ -244,8 +271,10 @@ class App() :
             self.showB.grid(column=176,row=11)
 
     def set_algo(self,*args):
+        type = self.list_type_file.get()
         al = self.list_algos.get()
         ls = self.list_files.get()
+        ch = self.list_chubeas.get()
         for child in self.parent.winfo_children() :
             child.destroy()
 
@@ -264,6 +293,11 @@ class App() :
         self.list_files.set(ls)
         self.all_files = tk.OptionMenu(self.parent,self.list_files, *self.files)
         self.all_files.grid(column=175,row=5)
+
+        if type == "chubeas" :
+            self.list_chubeas.set(ch)
+            self.all_chubeas = tk.OptionMenu(self.parent,self.list_chubeas, *self.chubeas)
+            self.all_chubeas.grid(column=176,row=5)
 
         self.label_files = tk.Label(self.parent, text="Which algorithm do you wish to launch ? ")
         self.label_files.grid(column=175,row=6)
@@ -295,13 +329,20 @@ class App() :
             self.showB = tk.Button(self.parent, text="Show graph", command=self.show)
             self.showB.grid(column=176,row=11)
 
+    def set_chubeas(self,*args):
+        type = self.list_type_file.get()
+        file = self.list_files.get()
+        if type == "chubeas" :
+            way = "test_files/All-MKP-Instances/chubeas/" + file
+            self.chubeas = [f for f in os.listdir(way)]
+            self.list_chubeas.set(self.chubeas[0])
 
     def launch(self,*args):
         pb = self.list_knapsnack_problem.get()
         al = self.list_algos.get()
         way = self.list_type_file.get()
         file = self.list_files.get()
-
+        ch = self.list_chubeas.get()
         match pb :
             case "0/1" :
                 n,wmax,list_objects = load(way,file)
@@ -363,6 +404,9 @@ class App() :
                     case _ :
                         print("defaut")
             case "multidimensional" :
+                if way == "chubeas" :
+                    way = way+"/"+file
+                    file = ch
                 n,ksc,ndim,list_objects = load_multi(way,file)
                 match al:
                     case "ant_colony" :
