@@ -9,18 +9,31 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
 
-title = "Comparison of the Execution Time of some algorithms\nresolving knackpack problems"
-xLabel = "Test Data"
-yLabel = "Execution Time (s)"
+# label names
+title = "Comparison of the Execution Time of some algorithms\nfor solving Knapsack Problems."
+xLabel = "Tested Data"
+yLabel = "Execution Time (seconds)"
 personalAlgo = "'Personal Algorithm'"
 
 
+# create and show the graph
 def graph(time, tests):
 
-    print("\n brute_force :     ", time["brute_force"], "\n branch_and_bound :", time["branch_and_bound"], "\n greedy :          ", time["greedy"], "\n greedy_value :      ", time["greedy_value"], "\n greedy_weight :      ", time["greedy_weight"], "\n dynamic :         ", time["dynamic_programming"], "\n polynomial :      ", time["polynomial"], "\n grasp :            ", time["grasp"], "\n ant_colony :      ", time["ant_colony"], "\n personal :        ", time["personal"], "\n\n test files :      ", tests, flush=True)
-    print()
+    # print the data in terminal
+    print("\n brute_force :     ", time["brute_force"], flush=True)
+    print(" branch_and_bound :", time["branch_and_bound"], flush=True)
+    print(" greedy :          ", time["greedy"], flush=True)
+    print(" greedy_value :    ", time["greedy_value"], flush=True)
+    print(" greedy_weight :   ", time["greedy_weight"], flush=True)
+    print(" dynamic :         ", time["dynamic_programming"], flush=True)
+    print(" polynomial :      ", time["polynomial"], flush=True)
+    print(" grasp :           ", time["grasp"], flush=True)
+    print(" ant_colony :      ", time["ant_colony"], flush=True)
+    print(" personal :        ", time["personal"], flush=True)
+    print("\n test files :      ", tests, "\n", flush=True)
 
 
+    # create a curve for each tested algorithm
     
     if len(time["brute_force"]) != 0 :
         plt.plot(tests, time["brute_force"], label='Brute force', marker = '.', color = 'royalblue')
@@ -32,10 +45,10 @@ def graph(time, tests):
         plt.plot(tests, time["greedy"], label = 'Greedy', marker = '.', color = 'limegreen')
 
     if len(time["greedy_value"]) != 0 :
-        plt.plot(tests, time["greedy_value"], label = 'Greedy Value', marker = '.', color = 'c')
+        plt.plot(tests, time["greedy_value"], label = 'Greedy Value', marker = '.', color = 'yellowgreen')
 
     if len(time["greedy_weight"]) != 0 :
-        plt.plot(tests, time["greedy_weight"], label = 'Greedy Weight', marker = '.', color = 'c')
+        plt.plot(tests, time["greedy_weight"], label = 'Greedy Weight', marker = '.', color = 'seagreen')
 
     if len(time["dynamic_programming"]) != 0 :
         plt.plot(tests, time["dynamic_programming"], label = 'Dynamic', marker = '.', color = 'r')
@@ -44,21 +57,24 @@ def graph(time, tests):
         plt.plot(tests, time["polynomial"], label = 'Polynomial', marker = '.', color = 'm')
     
     if len(time["grasp"]) != 0 :
-        plt.plot(tests, time["grasp"], label = 'Grasp', marker = '.', color = 'c')
+        plt.plot(tests, time["grasp"], label = 'Grasp', marker = '.', color = 'skyblue')
     
     if len(time["ant_colony"]) != 0 :
         plt.plot(tests, time["ant_colony"], label = 'Ant colony', marker = '.', color = 'hotpink')
 
     if len(time["personal"]) != 0 :
-        plt.plot(tests, time["personal"], label = personalAlgo, marker = '.', color = 'y')
+        plt.plot(tests, time["personal"], label = personalAlgo, marker = '.', color = 'tan')
 
+
+    # create labels
     plt.grid()
     plt.ylabel(yLabel)
     plt.xlabel(xLabel)
-
-    plt.title(title, fontname = "Times New Roman", fontsize = 15, fontweight = "bold", y = 1.02)
-
+    plt.title(title, fontname = "Times New Roman", fontsize = 15, fontweight = "bold", y = 1.01)
     plt.legend()
+
+
+    # show graph
     plt.show()
 
     
