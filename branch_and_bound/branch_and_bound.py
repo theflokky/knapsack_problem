@@ -52,6 +52,7 @@ def banchBound(nbItems, w, listItems) :
 
 # recursive function which for each item of the list, tests to take it or not in order to find the best solution.
 # input : item list, current value, current weight, current index item
+# output : fill finalWeight, finalValue, finalSolution
 def banchBoundRec(listItems, currentValue, currentWeight, i) :
     global NB_ITEMS, W, finalWeight, finalValue, finalSolution, tempSolution
 
