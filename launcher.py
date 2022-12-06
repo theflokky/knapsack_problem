@@ -48,7 +48,7 @@ class App() :
         self.parent.geometry("1200x800")
 
         self.knapsnack_problem = ["0/1","multidimensional"]
-        self.type_file = ["low-dimensional","large_scale"]
+        self.type_file = ["low-dimensional","large_scale","personal_files"]
         self.files = [f for f in os.listdir("test_files/low-dimensional")]
         self.algos = ["ant_colony","branch_and_bound","brute_force","dynamic_programming","greedy_value","greedy_weight","greedy","grasp","polynomial","personal","comp"]
 
@@ -133,6 +133,7 @@ class App() :
                 self.type_file.clear()
                 self.type_file.append("low-dimensional")
                 self.type_file.append("large_scale")
+                self.type_file.append("personal_files")
                 self.files = [f for f in os.listdir("test_files/low-dimensional")]
                 self.algos = self.algos01
             case "multidimensional" :
@@ -217,9 +218,11 @@ class App() :
                 self.files = [f for f in os.listdir("test_files/low-dimensional")]
             case "large_scale":
                 self.files = [f for f in os.listdir("test_files/large_scale")]
+            case "personal_files":
+                self.files = [f for f in os.listdir("test_files/personal_files")]
+
             case "chubeas" :
                 self.files = [f for f in os.listdir("test_files/All-MKP-Instances/chubeas")]
-
                 self.all_chubeas = tk.OptionMenu(self.parent,self.list_chubeas, *self.chubeas)
                 self.all_chubeas.grid(column=176,row=5)
             case "gk" :
