@@ -37,8 +37,11 @@ def sumPheroValue(phero,list_objects,candidates,current) : # do not change !!!
     sum=0
     for i in range(len(list_objects)) :
         if candidates[i] == 1 :
-            sum += math.pow(phero[current][i],ALPHA)*math.pow((list_objects[i][0]/list_objects[i][1]),BETA)
-    if sum == 0 :
+            if(list_objects[i][1] == 0):
+                sum += math.pow(phero[current][i],ALPHA)*math.pow((list_objects[i][0]),BETA)
+            else:
+                sum += math.pow(phero[current][i],ALPHA)*math.pow((list_objects[i][0]/list_objects[i][1]),BETA)
+    if sum < 0.01 :
         sum = 0.01 
     return sum
 
@@ -81,7 +84,10 @@ def setProb(probabilities, phero ,list_objects,candidates,current): # do not cha
         # Calculate only for items candidates
         if i[1] == 1 :
             minProb = maxProb
-            maxProb += (math.pow(phero[current][i[0]],ALPHA)*math.pow((list_objects[i[0]][0]/list_objects[i[0]][1]),BETA))/p
+            if(list_objects[i[0]][1] == 0):
+                maxProb += (math.pow(phero[current][i[0]],ALPHA)*math.pow((list_objects[i[0]][0]),BETA))/p
+            else:
+                maxProb += (math.pow(phero[current][i[0]],ALPHA)*math.pow((list_objects[i[0]][0]/list_objects[i[0]][1]),BETA))/p
             probabilities.update({i[0] : [minProb, maxProb]})
 
 def ant(list_objects,nbAnts,n,wmax):
