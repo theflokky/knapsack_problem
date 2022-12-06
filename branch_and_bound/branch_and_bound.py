@@ -14,10 +14,15 @@ tempSolution = []
 # input : number of items, maximum weight, item list
 # output : execution time, solution item list, solution value
 def banchBound(nbItems, w, listItems) :
-    global NB_ITEMS, W, finalSolution, tempSolution
+    global NB_ITEMS, W, finalSolution, tempSolution ,finalValue, finalWeight
 
     NB_ITEMS = nbItems
     W = w
+
+    finalWeight = 0
+    finalValue = 0
+    finalSolution = []
+    tempSolution = []
 
     currentValue = 0
     currentWeight = 0
@@ -27,7 +32,7 @@ def banchBound(nbItems, w, listItems) :
     start = time.time()
 
     # sort items by value/weight
-    listItems = sorted(listItems, key= lambda x : -x[0]/x[1])
+    listItems = sorted(listItems, key= lambda x : -x[0]/x[1] if x[1] else -x[0])
     
     # initialisation
     while len(tempSolution) < NB_ITEMS:

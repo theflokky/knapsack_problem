@@ -22,7 +22,20 @@ def find_minrun(n):
 def insertion_sort_01(list, left, right):
     for i in range(left + 1, right + 1):
         j = i
-        while j > left and list[j][0]/list[j][1] > list[j - 1][0]/list[j - 1][1]:
+        while j > left :
+            if list[j-1][1] != 0 and list[j][1]!=0 :
+                if list[j][0]/list[j][1] <= list[j - 1][0]/list[j - 1][1] :
+                    break
+            elif list[j-1][1] == 0 and list[j][1]!=0 :
+                if list[j][0]/list[j][1] <= list[j - 1][0] :
+                    break
+            elif list[j-1][1] != 0 and list[j][1]==0 :
+                if list[j][0] <= list[j - 1][0]/list[j - 1][1] :
+                    break
+            elif list[j-1][1] == 0 and list[j][1]==0 :
+                if list[j][0] <= list[j - 1][0] :
+                    break
+                
             list[j], list[j-1] = list[j - 1], list[j]
             j -= 1
 
