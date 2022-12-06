@@ -70,7 +70,7 @@ def graph(time, tests):
     plt.grid()
     plt.ylabel(yLabel)
     plt.xlabel(xLabel)
-    plt.title(title, fontname = "Times New Roman", fontsize = 15, fontweight = "bold", y = 1.01)
+    plt.title(title, fontname = "Liberation Serif", fontsize = 15, fontweight = "bold", y = 1.01)
     plt.legend()
 
 
