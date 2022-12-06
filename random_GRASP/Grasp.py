@@ -61,12 +61,34 @@ def merge_01(list, l, m, r):
 
     # After comparing the list, we merge them
     while i < len1 and j < len2:
-        if left[i][0]/left[i][1] < right[j][0]/right[j][1]:
-            list[k] = right[j]
-            j+=1
-        else:
-            list[k] = left[i]
-            i+=1
+        if left[i][1] != 0 and right[j][1] != 0:
+            if left[i][0]/left[i][1] < right[j][0]/right[j][1]:
+                list[k] = right[j]
+                j+=1
+            else:
+                list[k] = left[i]
+                i+=1
+        elif left[i][1] != 0:
+            if left[i][0]/left[i][1] < right[j][0]:
+                list[k] = right[j]
+                j+=1
+            else:
+                list[k] = left[i]
+                i+=1
+        elif right[j][1] != 0:
+            if left[i][0] < right[j][0]/right[j][1]:
+                list[k] = right[j]
+                j+=1
+            else:
+                list[k] = left[i]
+                i+=1
+        else :
+            if left[i][0] < right[j][0]:
+                list[k] = right[j]
+                j+=1
+            else:
+                list[k] = left[i]
+                i+=1
         k+=1
 
     # The comparison has ended, we check if any list is non-empty
@@ -181,9 +203,24 @@ def grasp(lo, nbI, w):
 def insertion_sort_multi(list, left, right):
     for i in range(left + 1, right + 1):
         j = i
-        while j > left and list[j][0]/(sum(list[j][1])/len(list[j][1])) > list[j - 1][0]/(sum(list[j - 1][1])/len(list[j][1])):
-            list[j], list[j-1] = list[j - 1], list[j]
-            j -= 1
+        val_check_1 = (sum(list[j][1])/len(list[j][1]))
+        val_check_2 = (sum(list[j - 1][1])/len(list[j][1]))
+        if val_check_1 != 0 and val_check_2 != 0:
+            while j > left and list[j][0]/val_check_1 > list[j - 1][0]/val_check_2:
+                list[j], list[j-1] = list[j - 1], list[j]
+                j -= 1
+        elif val_check_1 != 0:
+            while j > left and list[j][0]/val_check_1 > list[j - 1][0] :
+                list[j], list[j-1] = list[j - 1], list[j]
+                j -= 1
+        elif val_check_2 != 0 :
+            while j > left and list[j][0] > list[j - 1][0]/val_check_2:
+                list[j], list[j-1] = list[j - 1], list[j]
+                j -= 1
+        else :
+            while j > left and list[j][0] > list[j - 1][0]:
+                list[j], list[j-1] = list[j - 1], list[j]
+                j -= 1
 
 
 
@@ -209,12 +246,36 @@ def merge_multi(list, l, m, r):
 
     # After comparing the list, we merge them
     while i < len1 and j < len2:
-        if left[i][0]/sum(left[i][1])/len(left[i][1]) < right[j][0]/sum(right[j][1])/len(right[j][1]):
-            list[k] = right[j]
-            j+=1
-        else:
-            list[k] = left[i]
-            i+=1
+        val_check_1 = sum(left[i][1])/len(left[i][1])
+        val_check_2 = sum(right[j][1])/len(right[j][1])
+        if val_check_1 != 0 and val_check_2 != 0:
+            if left[i][0]/val_check_1 < right[j][0]/val_check_2:
+                list[k] = right[j]
+                j+=1
+            else:
+                list[k] = left[i]
+                i+=1
+        elif val_check_1 != 0:
+            if left[i][0]/val_check_1 < right[j][0]:
+                list[k] = right[j]
+                j+=1
+            else:
+                list[k] = left[i]
+                i+=1
+        elif val_check_2 != 0:
+            if left[i][0] < right[j][0]/val_check_2:
+                list[k] = right[j]
+                j+=1
+            else:
+                list[k] = left[i]
+                i+=1
+        else :
+            if left[i][0] < right[j][0] :
+                list[k] = right[j]
+                j+=1
+            else:
+                list[k] = left[i]
+                i+=1
         k+=1
 
     # The comparison has ended, we check if any list is non-empty
