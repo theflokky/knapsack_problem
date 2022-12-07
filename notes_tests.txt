@@ -12,9 +12,4 @@ For the Ant and GRASP algorithm, we runned the test files 10 times in order to b
 
 First for the 0/1 knapsack problems :
 
-    - On the test file :
-        
-        - f4_l-d_kp_4_11 :
-
-                - ant_colony :
-                        - 
+    
