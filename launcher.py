@@ -9,6 +9,9 @@ import ant_colony.ant_colony as ant
 import brute_force.brute_force as bruteForce
 import branch_and_bound.branch_and_bound as branch
 import random_GRASP.Grasp as grasp
+import dynamic_programming.dynamic_programming as dyna
+import fptas.fptas as fptas
+import personal_approach.meet_in_the_middle as perso
 import graph 
 
 class ChecklistBox(tk.Frame):
@@ -354,6 +357,7 @@ class App() :
         match pb :
             case "0/1" :
                 n,wmax,list_objects = load(way,file)
+                print(n)
                 match al:
                     case "ant_colony" :
                         if str(self.nb_iter.get()).isnumeric() :
@@ -366,19 +370,23 @@ class App() :
                     case "brute_force" :
                         t,obj,value = bruteForce.bruteForce(wmax,list_objects)
                     case "dynamic_programming" :
-                        print("à faire")
+                        t,obj,value = dyna.dynamic(list_objects,wmax)
                     case "greedy_value" :
                         t,obj,value = greedyV.greedy_value_01(list_objects,wmax)
                     case "greedy_weight" :
                         t,obj,value = greedyW.greedy_weight_01(list_objects,wmax)
                     case "greedy" :
                         t,obj,value = greedy.greedy_01(list_objects,wmax)
+                    case "polynomial" :
+                        t,obj,value = fptas.fptas(1,wmax,list_objects)
                     case "grasp" :
                         if str(self.nb_iter.get()).isnumeric() :
                             nb = int(self.nb_iter.get())
                         else :
                             nb = 30
                         t,obj,value = grasp.grasp(list_objects, nb, wmax)
+                    case "personal":
+                        t,obj,value = perso.meet_in_the_middle(list_objects, wmax)
                     case "comp" :
                         tmp = self.checklist.getCheckedItems()
                         self.compF.append(file)
@@ -395,7 +403,8 @@ class App() :
                                     t,obj,value = bruteForce.bruteForce(wmax,list_objects)
                                     self.comp["brute_force"].append(t)
                                 case "dynamic_programming" :
-                                    print("à faire")
+                                    t,obj,value = dyna.dynamic(list_objects,wmax)
+                                    self.comp["dynamic_programming"].append(t)
                                 case "greedy_value" :
                                     t,obj,value = greedyV.greedy_value_01(list_objects,wmax)
                                     self.comp["greedy_value"].append(t)
@@ -409,6 +418,12 @@ class App() :
                                     nb = 30
                                     t,obj,value = grasp.grasp(list_objects, nb, wmax)
                                     self.comp["grasp"].append(t)
+                                case "polynomial":
+                                    t,obj,value = fptas.fptas(1,wmax,list_objects)
+                                    self.comp["polynomial"].append(t)
+                                case "personal":
+                                    t,obj,value = perso.meet_in_the_middle(list_objects, wmax)
+                                    self.comp["personal"].append(t)
                     case _ :
                         print("defaut")
             case "multidimensional" :

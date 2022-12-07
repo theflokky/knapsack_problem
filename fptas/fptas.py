@@ -1,35 +1,88 @@
 import os.path
 import time
 
-def dynamic(wmax :  int, objects : list):
-    matrix = [[0 for i in range(wmax + 1)] for i in range(len(objects) + 1)]
-    for i in range(len(objects)+1):
-        for w in range(wmax+1):
-            if i == 0 or w == 0:
-                matrix[i][w] = 0
-            elif objects[i-1][1] <= w:
-                matrix[i][w] = max(objects[i-1][0] + matrix[i-1][w - objects[i-1][1]], matrix[i-1][w])
-            else :
-                matrix[i][w] = matrix[i-1][w]
+def dynamic(lo, w):
+    lot = lo[:]
 
-    selection = [False for i in range(len(objects))]
-    j = wmax
-    while j > 0:
-        for i in range(len(objects),0,-1):
-            if matrix[i][j] > matrix[i-1][j] :
-                selection[i-1] = True
-                break
-        j-=1
-    print(selection)
+    loiks = []
+
+    # Creating a table consisting of 0 to n objects as rows
+    # and 0 to Knapsack maximum weight as columns
+    matrix = [[0 for i in range(w + 1)] for i in range(len(lot) + 1)]
+
+    # Filling up the table
+    for i in range(len(lot)+1):
+        for j in range(w+1):
+            # used for setting the 0th row and 0th column to 0
+            if i == 0 or j == 0:
+                matrix[i][j] = 0
+            # Checking if weight of ith item is acceptable
+            elif lot[i-1][1] <= j:
+                # Selecting the best value out of two possibilities
+                # matrix[i-1][j] means the item isn't included
+                # lot[i-1][0] means the item is included
+                matrix[i][j] = max(lot[i-1][0] + matrix[i-1][j - lot[i-1][1]], matrix[i-1][j])
+            else :
+                # Objects weigth excesseded maximum capacity
+                matrix[i][j] = matrix[i-1][j]
+
+    checking_value = matrix[len(lot)][w]
+    checking_weigth = w
+
+    # Getting all selected objects
+    for i in range(len(lot), 0, -1):
+        # When reached all selected item are found
+        if checking_value <= 0:
+            break
+        
+        if checking_value == matrix[i-1][checking_weigth]:
+            # The item wasn't included so we don't do anything
+            continue
+        else :
+            # This item is used, so we load it's index in order to know which item we will need to take
+            loiks.append(i-1)
+
+            # As it was selected we need to substract the weigth and value from the checkers
+            checking_value -= lot[i-1][0]
+            checking_weigth -= lot[i-1][1]
+
+    return loiks
+    
+
+
 def fptas(epsilon : float, wmax : int, objects : list):
 
+    start_process = time.time()
+
+    final_value = 0
+    final_knapsack = []
+
+    # As the dynamic approach is faster the smaller the values are we try to reduce to values as much as possible
+    
     P = objects[0][0]
+    # We first get the highest value available
     for i in range(1,len(objects)):
         if objects[i][0] > P:
             P = objects[i][0]
+    
+    # We then see how much we can divide the profits
     K = epsilon * P / len(objects)
+
+    # We apply our results to the list
     tmp_objects = [(int(a[0]/K), a[1]) for a in objects]
-    dynamic(wmax,tmp_objects)
+
+    # This version of dynamic returns the list of index of objects (as the paramater is a modified version) in order to get the final knapsack
+    liste_index = dynamic(tmp_objects,wmax)
+
+    for i in liste_index :
+        final_knapsack.append(objects[i])
+        final_value += objects[i][0]
+
+    end_process = time.time()
+
+    return (end_process - start_process), final_knapsack, final_value
+
+
 if __name__=="__main__":
     #Main reading loop
     valid = True
