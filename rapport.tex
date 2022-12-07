@@ -83,7 +83,7 @@ In order to solve the knapsack problem, we first took the time to create a knaps
             \hline
             Dynamic Programming for 0/1 problems. & Ian RIVIERE \\
             \hline 
-            FPETAS for 0/1 problems. & Ian RIVIERE \\
+            FPTAS for 0/1 problems. & Ian RIVIERE \\
             \hline
             GRASP for 0/1 problems.  & Alexandre MARINE \\
             \hline
@@ -199,10 +199,74 @@ In order to solve the knapsack problem, we first took the time to create a knaps
 
 \section{Tests}
     \subsection{Test procedure}
+
+    Every tests were made following this protocol :
+    It was done on a laptop with those specifications :
+    \tabto{1.5cm} - Processor AMD Ryzen 5 4600H
+    \tabto{2.5cm} -- 6 cores and 2 sockets (12 virtual cores) running at 4Ghz
+    \tabto{1.5cm} - architecture x86\_64
+    \tabto{1.5cm} - 8 GiB of RAM running at 3200MHz
+
+    Only the process \verb+launcher.py+ was launched during the test periods (at the exception of all daemon process and the terminal).
+
+    For the ant colony and GRASP, all values are a median of multiple tests (10 runs per Algo), to ensure that we approximate the best way the value as it includes some randomness.
+
+    We decided to split the algorithms that have similar functioning into 4 Categories in order to make the tests :
+    \tabto{1.5cm} - Brute Force, Branch and Bound and Personnal approach
+    \tabto{1.5cm} - Dynamic Programming and FPTAS
+    \tabto{1.5cm} - Ant Colony and GRASP
+    \tabto{1.5cm} - Greedies algorithms
     
-    \subsection{Test Results}
+    Once we had determined the best of each category, we have been able to test around the 4 remaining algorithms to determine the best one.
+
+    \subsection{Test Results on 0/1 Problems}
+        \subsubsection{Time Complexity}
+        \begin{
+            \includegraphics[scale = 0.5]{graph_bf_perso.png}
+            \captionof{figure}{Comparison between Brute Force and Personal Algorithm}
+            
+            \includegraphics[scale = 0.5]{graph_perso_bab.png}
+            \captionof{figure}{Comparison between Personal Algorithm and Branch and Bound}
+            
+            \includegraphics[scale = 0.4]{graph_dyna_poly.png}
+            \captionof{figure}{Comparison between Dynamic Programming and FPTAS}
+            
+            \includegraphics[scale = 0.4]{graph_grasp_ant.png}
+            \captionof{figure}{Comparison between Ant Colony and GRASP}
+            
+            \includegraphics[scale = 0.5]{graph_greedys.png}
+            \captionof{figure}{Comparison between Greedies algorithms}
+            
+            \includegraphics[scale = 0.4]{graph_bests.png}
+            \captionof{figure}{Comparison between the Best One of Each Category}
+
+            \includegraphics[scale = 0.5]{graph_high_numbers.png}
+            \captionof{figure}{Comparison between GRASP, all greedy and polynomial}
+
+            \includegraphics[scale = 0.5]{graph_best_high_numbers.png}
+            \captionof{figure}{Comparison of the two best at very high numbers.}
+
+        \subsubsection{Solution Accuracy}
+
+
+            \includegraphics[scale = 0.45]{values_0-1.png}
+            \captionof{figure}{}
+
+    \subsection{Test Results on Multidimensional Problems}
+
+    \subsubsection{Time Complexity}
+
+    \includegraphics[scale = 0.5]{graph_multi_1.png}
+    \captionof{figure}{Comparison between GRAPS, Brute Force and all Greedy}
+
+    \includegraphics[scale = 0.5]{graph_multi_gk_greed.png}
+        \captionof{figure}{Comparison between GRASP and all Greedy}
+
+
+    \subsubsection{Accuracy}
 
     \subsection{Results Interpretation}
+       
 
 \section{Workload}
 \begin{center}
@@ -697,6 +761,112 @@ In order to solve the knapsack problem, we first took the time to create a knaps
         $set\_phero(phero,best\_solution,current\_solution)$\;
     }
 \end{algorithm}
+
+\newpage
+
+\begin{algorithm}
+    \caption{Dynamic programming}
+    \DontPrintSemicolon
+    \SetKwFunction{FMain}{Dynamic programming}
+    \SetKwProg{Fn}{Function}{:}{}
+    \KwData{$list\_objects$, $wmax$, a list of tuple object with their profit and weight, the maximum capacity of the knapsack}
+
+    \Fn{\FMain{$list\_objects$,$wmax$}}{
+        $start\_timer$\;
+        $list\_temp \gets list\_objects$\;
+        $final\_list \gets []$\;
+        $final\_value \gets 0$\;
+    
+        \tcc{Creating the matrix of 0 to n objects as rows and 0 to Knapsack max weight}\;
+
+        $matrix = [0] *\ (w+1)\ *\ (len(list\_temp) + 1)$
+
+        \tcc{Filling the table}\;
+        \For{$i$ \KwTo $len(list\_temp) + 1$}{
+            \For{$j$ \KwTo $wmax + 1$}{
+                \uIf{$i == 0$ or $j == 0$}{
+                    $matrix[i][j] \gets 0$\;
+                }
+                \uElseIf{$list\_temp[i-1][1] <= j$}{
+                    $matrix[i][j] \gets max(list\_temp[i-1][0] + matrix[i-1][j - list\_temp[i-1][1]], matrix[i-1][j])$\;
+                }
+                \Else{
+                    $matrix[i][j] \gets matrix[i-1][j]$\;
+                }
+            }
+        }
+        $final\_value = matrix[len(list\_temp)][wmax]$\;
+        $checking\_value \gets final\_value$\;
+        $checking\_weight \gets wmax$\;
+
+        \tcc{Getting all selected items}\;
+        \For{$i \gets -1$ \textbf{from} $len(list\_temp)$ \KwTo $0$}{
+            \If{$checking\_value <= 0$}{
+                $break$\;
+            }
+            \eIf{$checking\_value == matrix[i-1][checking\_weight]$}{
+                $continue$\;
+            }
+            {
+                $final\_list.append(list\_temp[i-1])$\;
+                $checking\_value -= list\_temp[i-1][0]$\;
+                $checking\_weight -= list\_temp[i-1][1]$\;
+            }
+        }
+
+
+        $end\_timer$\;
+
+
+}
+\KwResult{$final\_list$, $final\_value$}
+
+\end{algorithm}
+
+\newpage
+
+\begin{algorithm}
+
+    \caption{Fully polynomial time approximation scheme}
+    \DontPrintSemicolon
+    \SetKwFunction{FMain}{Fptas}
+    \SetKwProg{Fn}{Function}{:}{}
+
+    \KwData{$epsilon$, $wmax$, $list\_objects$}
+
+    \Fn{\FMain{$epsilon$, $wmax$, $list\_objects$}}{
+        $start\_timer$\;
+        $final\_value \gets 0$\;
+        $final\_list \gets []$\;
+
+        $P \gets list\_objects[0][0]$\;
+
+        \For{$i$ \textbf{from} $1$ \KwTo{$len(list\_objects)$}}{
+            \If{$list\_objects[i][0] > P$}{
+                $P \gets list\_objects[i][0]$\;
+            }
+        }
+
+        $K \gets (epsilon * P) / len(list\_objects)$\;
+
+        $list\_temp \gets [(int(a[0]/K), a[1])\ for\ a \in list\_objects]$\;
+
+        \tcc{It's a slightly modified version of Dynamic programming returning the list of index instead of the final\_list}
+        $list\_index \gets dynamic(list\_temp, wmax)$\;
+
+        \For{$i \in liste\_index$}{
+            $final\_sac.append(list\_objects[i])$\;
+            $final\_value += list\_objects[i][0]$\;
+        }
+
+        $end\_timer$\;
+    }
+    \KwResult{$final\_list$, $final\_value$}
+
+    
+\end{algorithm}
+
+\newpage
 
 \subsection{Checklist}
 \begin{enumerate}
