@@ -532,6 +532,13 @@ class App() :
             for i in tmp :
                 obj.append(i)
 
+        if len(obj)>20 and pb == "multidimensional" :
+            tmp = obj[-5:]
+            obj = obj[:5]
+            obj.append("...")
+            for i in tmp :
+                obj.append(i)
+
         for i in obj :
             o = o + " " + str(i)
 
