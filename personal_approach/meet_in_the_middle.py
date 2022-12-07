@@ -32,7 +32,6 @@ def meet_in_the_middle(lo, w):
     right_sac, right_value = solveSubSet(right, w)
 
 
-
     # merging right into left if possible
     cw = 0
     loiks = left_sac[:]
