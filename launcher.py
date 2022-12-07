@@ -338,10 +338,68 @@ class App() :
     def set_chubeas(self,*args):
         type = self.list_type_file.get()
         file = self.list_files.get()
+
+        type = self.list_type_file.get()
+        al = self.list_algos.get()
+        ls = self.list_files.get()
+        ch = self.list_chubeas.get()
+        for child in self.parent.winfo_children() :
+            child.destroy()
+
         if type == "chubeas" :
             way = "test_files/All-MKP-Instances/chubeas/" + file
             self.chubeas = [f for f in os.listdir(way)]
             self.list_chubeas.set(self.chubeas[0])
+            self.all_chubeas = tk.OptionMenu(self.parent,self.list_chubeas, *self.chubeas)
+            self.all_chubeas.grid(column=176,row=5)
+
+        self.label_knapsnack = tk.Label(self.parent, text="Problem : ")
+        self.label_knapsnack.grid(column=175,row=0)
+        self.all_knapsnack_problem = tk.OptionMenu(self.parent,self.list_knapsnack_problem, *self.knapsnack_problem)
+        self.all_knapsnack_problem.grid(column=175,row=1)
+
+        self.label_file = tk.Label(self.parent, text="Which scale do you wish to work on ? ")
+        self.label_file.grid(column=175,row=2)
+        self.all_type_file = tk.OptionMenu(self.parent,self.list_type_file, *self.type_file)
+        self.all_type_file.grid(column=175,row=3)
+        
+        self.label_files = tk.Label(self.parent, text="Which file do you wish to work on ? ")
+        self.label_files.grid(column=175,row=4)
+        self.list_files.set(ls)
+        self.all_files = tk.OptionMenu(self.parent,self.list_files, *self.files)
+        self.all_files.grid(column=175,row=5)
+
+        self.label_files = tk.Label(self.parent, text="Which algorithm do you wish to launch ? ")
+        self.label_files.grid(column=175,row=6)
+
+        self.all_algos = tk.OptionMenu(self.parent,self.list_algos, *self.algos)
+        self.all_algos.grid(column=175,row=7)
+
+        self.button = tk.Button(self.parent, text="Launch", command=self.launch)
+        self.button.grid(column=175,row=10)
+
+        self.label_ant = tk.Label(self.parent, text="How many iterations ? (default = 30) ")
+        self.nb_iter = tk.Entry(self.parent)
+
+        self.time = tk.Label(self.parent,text="")
+        self.obj = tk.Label(self.parent,text="")
+        self.value = tk.Label(self.parent,text="")
+        
+        if al == "ant_colony" or al == "grasp":
+            self.label_ant.grid(column=175,row=8)
+            self.nb_iter.grid(column=175,row=9)
+        
+        if al == "comp" :
+            self.checklist = ChecklistBox(root, self.choices, bd=1, relief="sunken", background="white")
+            self.checklist.grid(column=175,row=8)
+
+            self.clearB = tk.Button(self.parent, text="Clear comp", command=self.clear)
+            self.clearB.grid(column=175,row=11)
+
+            self.showB = tk.Button(self.parent, text="Show graph", command=self.show)
+            self.showB.grid(column=176,row=11)
+
+        
 
     def launch(self,*args):
         pb = self.list_knapsnack_problem.get()
