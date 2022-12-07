@@ -143,7 +143,6 @@ class App() :
                 self.type_file.clear()
                 self.type_file.append("chubeas")
                 self.type_file.append("gk")
-                self.type_file.append("sac94")
                 self.files = [f for f in os.listdir("test_files/All-MKP-Instances/chubeas")]
                 self.chubeas = [f for f in os.listdir("test_files/All-MKP-Instances/chubeas/OR10x100")]
 
@@ -154,7 +153,6 @@ class App() :
 
                 self.algos = self.algos_muti
                 if al in self.algos_muti:
-                    print("oui")
                     self.list_algos.set(al)
                 else :
                     self.list_algos.set(self.algos[0])
@@ -230,9 +228,6 @@ class App() :
                 self.all_chubeas.grid(column=176,row=5)
             case "gk" :
                 self.files = [f for f in os.listdir("test_files/All-MKP-Instances/gk")]
-            case "sac94" :
-                self.files = ["None"]
-            #/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\ To do
 
         self.label_knapsnack = tk.Label(self.parent, text="Problem : ")
         self.label_knapsnack.grid(column=175,row=0)
@@ -357,7 +352,6 @@ class App() :
         match pb :
             case "0/1" :
                 n,wmax,list_objects = load(way,file)
-                print(n)
                 match al:
                     case "ant_colony" :
                         if str(self.nb_iter.get()).isnumeric() :
@@ -434,8 +428,6 @@ class App() :
                 match al:
                     case "brute_force" :
                         t,obj,value = bruteForce.bruteForceMultiDimensional(ksc,list_objects)
-                    case "dynamic_programming" :
-                        print("à faire")
                     case "greedy_value" :
                         t,obj,value = greedyV.greedy_value_multi(list_objects,ksc)
                     case "greedy_weight" :
@@ -453,17 +445,9 @@ class App() :
                         self.compF.append(file)
                         for a in tmp :
                             match a :
-                                case "ant_colony" :
-                                    nb = 30
-                                    t,obj,value = ant.ant_multid(list_objects, ndim, nb, n, ksc)
-                                    self.comp["ant_colony"].append(t)
-                                case "branch_and_bound" :
-                                    print("à faire")
                                 case "brute_force" :
                                     t,obj,value = bruteForce.bruteForceMultiDimensional(ksc,list_objects)
                                     self.comp["brute_force"].append(t)
-                                case "dynamic_programming" :
-                                    print("à faire")
                                 case "greedy_value" :
                                     t,obj,value = greedyV.greedy_value_multi(list_objects,ksc)
                                     self.comp["greedy_value"].append(t)
