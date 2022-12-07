@@ -1,7 +1,6 @@
 #pip install matplotlib
 #pip install scipy
 #sudo apt-get install python3-pil python3-pil.imagetk
-#sudo apt install msttcorefonts -qq
 
 import sys
 import matplotlib
@@ -18,20 +17,6 @@ personalAlgo = "'Personal Algorithm'"
 
 # create and show the graph
 def graph(time, tests):
-
-    # print the data in terminal
-    print("\n brute_force :     ", time["brute_force"], flush=True)
-    print(" branch_and_bound :", time["branch_and_bound"], flush=True)
-    print(" greedy :          ", time["greedy"], flush=True)
-    print(" greedy_value :    ", time["greedy_value"], flush=True)
-    print(" greedy_weight :   ", time["greedy_weight"], flush=True)
-    print(" dynamic :         ", time["dynamic_programming"], flush=True)
-    print(" polynomial :      ", time["polynomial"], flush=True)
-    print(" grasp :           ", time["grasp"], flush=True)
-    print(" ant_colony :      ", time["ant_colony"], flush=True)
-    print(" personal :        ", time["personal"], flush=True)
-    print("\n test files :      ", tests, "\n", flush=True)
-
 
     # create a curve for each tested algorithm
     
