@@ -54,8 +54,9 @@ In order to solve the knapsack problem, we first took the time to create a knaps
 \tabto{1.5cm} For 0/1 knapsack problems.\\
 \tabto{2.5cm} - low-dimensional and large-scale from \href{http://artemisa.unicauca.edu.co/~johnyortega/instances_01_KP/}{Johny Ortega}
 \tabto{1.5cm} For Multidimensional problems.\\
-\tabto{2.5cm} - gk from \href{https://www.researchgate.net/publication/271198281_Benchmark_instances_for_the_Multidimensional_Knapsack_Problem}{F. Glover and G. Kochenberger}
-\tabto{2.5cm} - chubeas from \href{https://www.researchgate.net/publication/271198281_Benchmark_instances_for_the_Multidimensional_Knapsack_Problem}{P. C. Chu and J. E. Beasley}
+\tabto{2.5cm} - gk from \href{https://www.researchgate.net/publication/271198281_Benchmark_instances_for_the_Multidimensional_Knapsack_Problem}{F. Glover and G. Kochenberger}\\
+\tabto{2.5cm} - chubeas from \href{https://www.researchgate.net/publication/271198281_Benchmark_instances_for_the_Multidimensional_Knapsack_Problem}{P. C. Chu and J. E. Beasley}\\
+You can find the requirements and launching instructions into the README.md file of the project wich is a Markdown Document.
 
 \newpage
 
@@ -219,6 +220,8 @@ In order to solve the knapsack problem, we first took the time to create a knaps
     
     Once we had determined the best of each category, we have been able to test around the 4 remaining algorithms to determine the best one.
 
+    For the Solution accuracy, we launched each algorithms 10 times on the test files and took the median of all the solutions that had been found.
+
     \subsection{Test Results on 0/1 Problems}
         \subsubsection{Time Complexity}
             \includegraphics[scale = 0.5]{graph_bf_perso.png}
@@ -244,32 +247,61 @@ In order to solve the knapsack problem, we first took the time to create a knaps
 
             \includegraphics[scale = 0.5]{graph_best_high_numbers.png}
             \captionof{figure}{Comparison of the two best at very high numbers.}
+        
         \subsubsection{Solution Accuracy}
 
 
-            \includegraphics[scale = 0.45]{values_0-1.png}
-            \captionof{figure}{}
+        \includegraphics[scale = 0.45]{values_0-1.png}
+        \captionof{figure}{Table representing the Solution found by each algorithm.}
 
     \subsection{Test Results on Multidimensional Problems}
 
     \subsubsection{Time Complexity}
 
     \includegraphics[scale = 0.5]{graph_multi_1.png}
-    \captionof{figure}{Comparison between GRAPS, Brute Force and all Greedy}
+    \captionof{figure}{Comparison between GRASP, Brute Force and all Greedy}
 
     \includegraphics[scale = 0.5]{graph_multi_gk_greed.png}
-        \captionof{figure}{Comparison between GRASP and all Greedy}
+    \captionof{figure}{Comparison between GRASP and all Greedy}
 
 
     \subsubsection{Accuracy}
 
+    \includegraphics[scale = 0.5]{values_multidim.png}
+    \captionof{figure}{Table representing the Solution found for each algorithm.}
+
     \subsection{Results Interpretation}
-       
+
+    \subsubsection{0/1 Problems}
+
+        From all of our tests, we can see that brute force and our personal approach aren't very effective, even if brute force finds everytime the optimal value, it can't be processed beyond 25 objects (with 8Gib of RAM). Our personal value that tried to reduce the space complexity of brute force alogrithm worked as we can reach almost twice as much objects processed, but in the computation we lost the ability to always find the optimal value and so make it a not so worthy algorithm.\par
+
+        In opposition we have the branch and bound algorithm that manages to find the optimal value, but we reach a limitation. This limitation is the allowed number of recursive call managed by the processor, and the algorithm can't take more than a 1000 objects before reaching that limitation.\\
+        Now we only have to compare all greedys, the dynamic and fptas, as well as GRASP and ant colony.
+
+        Between all Greedy we spot that in general, the real greedy tends to work better at the exception of some files that are better suited for greedy by weight. Greedy by value is without a doubt the worst one as he doesn't even come close to the optimal value. But even if greedy is fast, it isn't close to the accuracy of all lasting algortihms.
+
+        Ant colony seems a bit too random to be used realisticly in comparison the GRASP, dynamic and polynomial algorithms. With that said it is still capable of putting out a fight against all other algorithms.
+
+        
+        From the table of values found, we could think that GRASP algorithm isn't equivalent to the dynamic and polynomial algorithms. But even if GRASP could sometimes not found the optimal value (because of it's randomness), it is capable of processing files beyond the 10000 objects in a reasonable run time (just a couple of seconds) whereas dynamic and polynomial algorithms aren't capable to process huge datasets (More than 2000 objects).
+
+        \subsection{Multidimensional Problems}
+
+        Our multidimensional tests are a little less important, as we didn't have as much algorithm to test the datasets on.
+
+        So, from our results, brute force algorithm isn't realisticly usable as he can't process more than 20 objects. So let's look at the greedys and GRASP.
+
+        Without surprise from the already seen 0/1 results, the greedys work fast but aren't that efficient whereas GRASP is capable of managing it's run time while being able to find the optimal value. Speaking of optimal value, we were surprised to see to see that the \verb+gk01.dat+ file had an optimal solution smaller than our found GRASP value. We firstly though that our implementation wasn't working fine, and tried to correct it. After this we added a checker program (style available in the comments of Grasp.py), that checks if the final knapsack found didn't broke any dimension.\par
+        To our surprise, it worked just fine, in confirmation of the checker program. So now we tend to think that maybe the datasets have an error on the optimal value of this sets. To confirm this idea even more, Our GRASP algorithm finds all the other optimal value from all other files.
+
+
+
 
 \section{Workload}
 \begin{center}
     \captionof{table}{Table representing the Workload in percentage for each group member.}
-    \begin{tabular}{|p{2cm}|p{2cm}|}
+    \begin{tabular}{|p{4cm}|p{2cm}|}
         \hline
         \textbf{Name} & \textbf{Percentage} \\
         \hline
@@ -289,15 +321,44 @@ In order to solve the knapsack problem, we first took the time to create a knaps
 
 \section{Conclusion}
 
+Now that we studied all of our algorithms, we can try to evaluate them. From our tests results, we can already say that brute force, personal approach, greedy by value and branch and bound aren't really effective outside of our test conditions, as they all have some big drawbacks from within their logic.
+
+As for greedy, greedy by weight and ant colony, they do not have enough reliability considering the value ratio on the optimal value awaited.
+For dynamic programming and polynomial approach, they aren't capable of processing huge datasets, and this is a very big drawback when we look at the modern problems and much data we have to process.
+
+So we end up with the most effective algorithm (from our tests results), being GRASP algorithm. Even if sometimes it may not found the optimal value because of its randomness. It always gives a very good approximation at the very least and can do it on very big datasets in more than acceptable process times (order of the seconds for 10000 objects).
+
 \newpage
 
 \appendix
 \section{Annexes}
 
-\listofalgocfs
+\subsection{Checklist}
+\begin{enumerate}
+    \item Did you proofead your report? Yes
+    \item Did you present the global objective of your work? Yes
+    \item Did you present the principles of all the methods/algorithms used in your project? Yes
+    \item Did you cite correctly the references to the methods/algorithms that are not from your own? Yes
+    \item Did you include all the details of your experimental setup to reproduce the experimental results, and explain the choice of the parameters taken? Yes
+    \item Did you provide curves, numerical results and error bars when results are run multiple times? Yes
+    \item Did you comment and interpret the different results presented? Yes
+    \item Did you include all the data, code, installation and running instructions needed to reproduce the results? Yes
+    \item Did you engineer the code of all the programs in a unified way to facilitate the addition of new methods/techniques and debugging? Yes
+    \item Did you make sure that the results different experiments and programs are comparable? Yes
+    \item Did you sufficiently comment your code? Yes
+    \item Did you add a thorough documentation on the code provided? No, we think we have made enough rich commentaries.
+    \item Did you provide the additional planning and the final planning in the report and discuss organization aspects in your work? Yes
+    \item Did you provide the workload percentage between the members of the group in the report? Yes
+    \item Did you send the work in time? Yes
+\end{enumerate}
+
 \newpage
 
 \subsection{Algorithms}
+
+\listofalgocfs
+
+\newpage
 \begin{algorithm}[hbt!]
     \caption{Branch\_and\_Bound}\label{alg:two}
     \KwData{$listItems$ : Item list, $nbItems$ : Number of items, $w$ : Capacity of the knapsack}
@@ -863,28 +924,6 @@ In order to solve the knapsack problem, we first took the time to create a knaps
 
     
 \end{algorithm}
-
-\newpage
-
-\subsection{Checklist}
-\begin{enumerate}
-    \item Did you proofead your report?
-    \item Did you present the global objective of your work?
-    \item Did you present the principles of all the methods/algorithms used in your project?
-    \item Did you cite correctly the references to the methods/algorithms that are not from your own?
-    \item Did you include all the details of your experimental setup to reproduce the experimental results, and explain the choice of the parameters taken?
-    \item Did you provide curves, numerical results and error bars when results are run multiple times?
-    \item Did you comment and interpret the different results presented?
-    \item Did you include all the data, code, installation and running instructions needed to reproduce the results?
-    \item Did you engineer the code of all the programs in a unified way to facilitate the addition of new methods/techniques and debugging?
-    \item Did you make sure that the results different experiments and programs are comparable?
-    \item Did you sufficiently comment your code?
-    \item Did you add a thorough documentation on the code provided?
-    \item Did you provide the additional planning and the final planning in the report and discuss organization aspects in your work?
-    \item Did you provide the workload percentage between the members of the group in the report?
-    \item Did you send the work in time?
-\end{enumerate}
-
 \end{document}
 
 

@@ -772,6 +772,11 @@ INPUT ./graph_multi_gk_greed.png
 INPUT graph_multi_gk_greed.png
 INPUT ./graph_multi_gk_greed.png
 INPUT ./graph_multi_gk_greed.png
+INPUT ./values_multidim.png
+INPUT ./values_multidim.png
+INPUT values_multidim.png
+INPUT ./values_multidim.png
+INPUT ./values_multidim.png
 INPUT ./rapport.loa
 INPUT rapport.loa
 INPUT rapport.loa

@@ -1,12 +1,12 @@
-\contentsline {algocf}{\numberline {1}{\ignorespaces Branch\_and\_Bound\relax }}{13}{algocf.1}%
-\contentsline {algocf}{\numberline {2}{\ignorespaces Branch\_and\_Bound\_Recursive\relax }}{14}{algocf.2}%
-\contentsline {algocf}{\numberline {3}{\ignorespaces Bound\relax }}{14}{algocf.3}%
-\contentsline {algocf}{\numberline {4}{\ignorespaces GenerateAllPossibilities\relax }}{15}{algocf.4}%
-\contentsline {algocf}{\numberline {5}{\ignorespaces Brute Force for 0/1 Knapsack Problems\relax }}{15}{algocf.5}%
-\contentsline {algocf}{\numberline {6}{\ignorespaces Brute Force for Multidimensional Knapsack Problems\relax }}{16}{algocf.6}%
-\contentsline {algocf}{\numberline {7}{\ignorespaces Greedy\relax }}{18}{algocf.7}%
-\contentsline {algocf}{\numberline {8}{\ignorespaces Greedy (follow up)\relax }}{19}{algocf.8}%
-\contentsline {algocf}{\numberline {9}{\ignorespaces GRASP\relax }}{20}{algocf.9}%
-\contentsline {algocf}{\numberline {10}{\ignorespaces Ant Colony\relax }}{21}{algocf.10}%
-\contentsline {algocf}{\numberline {11}{\ignorespaces Dynamic programming\relax }}{22}{algocf.11}%
-\contentsline {algocf}{\numberline {12}{\ignorespaces Fully polynomial time approximation scheme\relax }}{23}{algocf.12}%
+\contentsline {algocf}{\numberline {1}{\ignorespaces Branch\_and\_Bound\relax }}{16}{algocf.1}%
+\contentsline {algocf}{\numberline {2}{\ignorespaces Branch\_and\_Bound\_Recursive\relax }}{16}{algocf.2}%
+\contentsline {algocf}{\numberline {3}{\ignorespaces Bound\relax }}{17}{algocf.3}%
+\contentsline {algocf}{\numberline {4}{\ignorespaces GenerateAllPossibilities\relax }}{18}{algocf.4}%
+\contentsline {algocf}{\numberline {5}{\ignorespaces Brute Force for 0/1 Knapsack Problems\relax }}{18}{algocf.5}%
+\contentsline {algocf}{\numberline {6}{\ignorespaces Brute Force for Multidimensional Knapsack Problems\relax }}{19}{algocf.6}%
+\contentsline {algocf}{\numberline {7}{\ignorespaces Greedy\relax }}{20}{algocf.7}%
+\contentsline {algocf}{\numberline {8}{\ignorespaces Greedy (follow up)\relax }}{21}{algocf.8}%
+\contentsline {algocf}{\numberline {9}{\ignorespaces GRASP\relax }}{22}{algocf.9}%
+\contentsline {algocf}{\numberline {10}{\ignorespaces Ant Colony\relax }}{23}{algocf.10}%
+\contentsline {algocf}{\numberline {11}{\ignorespaces Dynamic programming\relax }}{24}{algocf.11}%
+\contentsline {algocf}{\numberline {12}{\ignorespaces Fully polynomial time approximation scheme\relax }}{25}{algocf.12}%

@@ -1,7 +1,7 @@
 # Fdb version 3
-["pdflatex"] 1670438985 "/home/tyrannide/Fac/M1/Algo/knapsack_problem/rapport.tex" "rapport.pdf" "rapport" 1670438986
+["pdflatex"] 1670442731 "/home/tyrannide/Fac/M1/Algo/knapsack_problem/rapport.tex" "rapport.pdf" "rapport" 1670442733
   "/etc/texmf/web2c/texmf.cnf" 1665479349 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/tyrannide/Fac/M1/Algo/knapsack_problem/rapport.tex" 1670438982 39520 64a1bf89e72a90a93f7ba2b60745ef90 ""
+  "/home/tyrannide/Fac/M1/Algo/knapsack_problem/rapport.tex" 1670442730 44274 23a2c6310b3749fe670af0c0e858fc5d ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecbi1095.tfm" 1136768653 3072 19a65fbc725cfc66f5a5fc183b9d418b ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecbx0600.tfm" 1136768653 3584 ad9fcbc26a2a7bccd6d08b0a5792fbe0 ""
@@ -133,12 +133,13 @@
   "graph_multi_1.png" 1670431795 42239 8939686c497e8c2473f3b63642c28947 ""
   "graph_multi_gk_greed.png" 1670431912 46093 a24bc71958261842ca10022386acbba7 ""
   "graph_perso_bab.png" 1670429977 37188 b92e9bf9d0197646d1753fd23dc0c5e5 ""
-  "rapport.aux" 1670438986 8669 cb910c9548a74d33398f6d3c1c63b018 "pdflatex"
-  "rapport.loa" 1670438986 1205 7b361097e626aa091c71a17c831b6516 "pdflatex"
-  "rapport.out" 1670438986 3759 af4095e6d76e262a487733501fb7a38e "pdflatex"
-  "rapport.tex" 1670438982 39520 64a1bf89e72a90a93f7ba2b60745ef90 ""
-  "rapport.toc" 1670438986 2246 0a824be27c1b97c13f467d2aaafc99ec "pdflatex"
+  "rapport.aux" 1670442733 9246 2f9c19fefc2309c66d71cdef9f9b7677 "pdflatex"
+  "rapport.loa" 1670442733 1205 8ca23b5c7c3b3dae260be7352bf29abe "pdflatex"
+  "rapport.out" 1670442733 4076 591376ad37f521de49bc2a3a93304ecd "pdflatex"
+  "rapport.tex" 1670442730 44274 23a2c6310b3749fe670af0c0e858fc5d ""
+  "rapport.toc" 1670442733 2427 db07bbc70f1dc3dec3e2f0011237eb69 "pdflatex"
   "values_0-1.png" 1670438619 44270 010c06d3cffbf65266d578d6afa94005 ""
+  "values_multidim.png" 1670441899 21995 9eb627d8b7ed7b5192a99dfacfff205e ""
   (generated)
   "rapport.aux"
   "rapport.loa"
