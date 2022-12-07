@@ -4,7 +4,7 @@ Brute Force Algorithm Implementation.
 
 #Imports
 import time
-import sys
+
 ###FUNCTION DECLARATIONS###
 
 def generateAllPossibilities(n):
@@ -23,7 +23,6 @@ def generateAllPossibilities(n):
     l = [[0], [1]]
     start = 0
     for i in range(1, n):
-        print(f"Ca progresse t'inquiète : {i}")
         tmp = len(l)
         for element in l[start:]:
             l.append([0] + element)
@@ -87,15 +86,16 @@ def bruteForce(maxWeight, objectList):
 
     return ((endTime - startTime), finalKnapsack, currentBest[1])
 
-def initializationOfList(size, list):
-    for i in range(size):
-        list.append(0)
-    return list
 
 def bruteForceMultiDimensional(ksc, objectList):
     """
-    Main Function implementing the Brute Force Algorihm on the MultiDimensional Knapsack Problem.
-    
+    Main function implementing the Brute Force Algorithm for Multidimensional problems.
+    Returns the time used for the execution, a list containing the objects taken and the optimal solution, given ksc the list of the capacities of each dimension of the knapsack and objectList, a list describing the set of objects that should be considered.
+    Parameters :
+    \tksc : list<int>
+    \tobjectList : list<(int,int)>
+    Output :
+    \t((runTime, finalKnapsack, solution) : (float, list<(int,int)>, list<int>)
     """
     # Starting timer
     startTime = time.time()
@@ -109,28 +109,30 @@ def bruteForceMultiDimensional(ksc, objectList):
     allPossibilities = generateAllPossibilities(len(objectList))
 
 
-    #parcours de toutes les possibilités
+    #Going through all the possibilities
     for currentPossibility, possibility in enumerate(allPossibilities):
+        #Reinitisalization of all the current value
         currentWeight = [0 for _ in range(nbDimension)]
-        #currentWeight = initializationOfList(nbDimension, [])
         currentValue = 0
-        if currentPossibility % 100000 == 0 : print(currentPossibility / len(allPossibilities),file = sys.stderr, flush=True)
         
+        #Going through the current possibility
         for index, bit in enumerate(possibility):
             #We add the object to the list
             if bit:
+                #Going through all the dimensions 
                 for dimension in range(nbDimension):
                 
                     currentWeight[dimension] += objectList[index][1][dimension]
 
-                    #cela rentre dans le sac
+                    #if it doesn't enter in the knapsack we stop the process
                     if not (currentWeight[dimension] <= ksc[dimension]):
                         break
                 else :
                     currentValue += objectList[index][0]
                     continue
                 break
-                    
+        
+        #We test if the current solution is better than the best one
         if (currentValue > currentBest[1]):
             currentBest = (currentPossibility, currentValue)
         
